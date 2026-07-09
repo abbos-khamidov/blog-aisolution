@@ -1,23 +1,25 @@
 import Link from "next/link";
+import { ContentPostCard } from "./ContentPostCard";
+import { SiteHeader } from "./SiteHeader";
 import type { Locale } from "@/lib/i18n";
 import { dictionary } from "@/lib/i18n";
-import { getPublishedPosts } from "@/lib/posts";
-import { PostCard } from "./PostCard";
-import { SiteHeader } from "./SiteHeader";
+import { clusterMeta, getClustersInUse, getPublishedPosts } from "@/lib/content";
 
 export function BlogHome({ locale }: { locale: Locale }) {
   const t = dictionary[locale];
-  const posts = getPublishedPosts();
+  const posts = getPublishedPosts(locale);
+  const clusters = getClustersInUse(locale);
 
   return (
     <>
       <SiteHeader locale={locale} />
       <main>
         <section className="hero">
-          <img src="/images/aisolution-blog-hero.png" alt="AISOLUTION editorial AI newsroom" />
-          <div className="hero-overlay" />
           <div className="hero-content">
-            <p className="kicker">{t.heroKicker}</p>
+            <div className="hero-label-row">
+              <p className="kicker">{t.heroKicker}</p>
+              <span className="signal-pill">AI / Central Asia</span>
+            </div>
             <h1>{t.heroTitle}</h1>
             <p className="hero-copy">{t.heroCopy}</p>
             <div className="hero-actions">
@@ -29,6 +31,11 @@ export function BlogHome({ locale }: { locale: Locale }) {
               </a>
             </div>
           </div>
+          <div className="hero-visual">
+            <img src="/images/aisolution-blog-hero.png" alt="AI Solution" />
+            <img className="hero-motto hero-motto-light" src="/brand/motto-light-transparent.png" alt="AI Solution motto" />
+            <img className="hero-motto hero-motto-dark" src="/brand/motto-dark-transparent.png" alt="AI Solution motto" />
+          </div>
         </section>
 
         <section className="ticker" aria-label="Editorial signals">
@@ -37,32 +44,23 @@ export function BlogHome({ locale }: { locale: Locale }) {
             <span>AI Solution</span>
             <span>aisolutions</span>
             <span>AI CRM Uzbekistan</span>
-            <span>Market radar</span>
-            <span>New faces</span>
           </div>
         </section>
 
-        <section className="radar" id="radar">
+        <section className="radar" id="clusters">
           <div className="section-head">
-            <p className="kicker">{t.radarKicker}</p>
-            <h2>{t.radarTitle}</h2>
+            <p className="kicker">{t.clustersKicker}</p>
+            <h2>{t.clustersTitle}</h2>
+            <p className="section-copy">{t.clustersCopy}</p>
           </div>
           <div className="radar-grid">
-            <article>
-              <span>01</span>
-              <h3>{t.radarOneTitle}</h3>
-              <p>{t.radarOneCopy}</p>
-            </article>
-            <article>
-              <span>02</span>
-              <h3>{t.radarTwoTitle}</h3>
-              <p>{t.radarTwoCopy}</p>
-            </article>
-            <article>
-              <span>03</span>
-              <h3>{t.radarThreeTitle}</h3>
-              <p>{t.radarThreeCopy}</p>
-            </article>
+            {clusters.map((cluster, index) => (
+              <Link key={cluster} className="cluster-card" href={`/${locale}/cluster/${cluster}`}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <h3>{clusterMeta[cluster].title[locale]}</h3>
+                <p>{clusterMeta[cluster].description[locale]}</p>
+              </Link>
+            ))}
           </div>
         </section>
 
@@ -71,19 +69,12 @@ export function BlogHome({ locale }: { locale: Locale }) {
             <div>
               <p className="kicker">{t.feedKicker}</p>
               <h2>{t.feedTitle}</h2>
-            </div>
-            <div className="filter-pills" aria-label="Post filters">
-              <button className="is-active" type="button">
-                {t.filtersAll}
-              </button>
-              <button type="button">CRM</button>
-              <button type="button">{t.filtersRadar}</button>
-              <button type="button">{t.filtersFaces}</button>
+              <p className="section-copy">{t.feedCopy}</p>
             </div>
           </div>
           <div className="post-grid">
             {posts.map((post) => (
-              <PostCard key={post.id} post={post} locale={locale} />
+              <ContentPostCard key={post.slug} post={post} locale={locale} />
             ))}
           </div>
         </section>
@@ -98,11 +89,8 @@ export function BlogHome({ locale }: { locale: Locale }) {
       </main>
 
       <footer className="site-footer">
-        <span>AISOLUTION Blog</span>
+        <span>AI Solution Blog</span>
         <Link href="https://aisolution.uz">aisolution.uz</Link>
-        <Link href="/ais-pulse" rel="nofollow">
-          editor
-        </Link>
       </footer>
     </>
   );

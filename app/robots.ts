@@ -4,9 +4,9 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
-      allow: "/",
-      disallow: "/ais-pulse"
+      allow: "/"
     },
-    sitemap: "https://blog.aisolution.uz/sitemap.xml"
+    sitemap: "https://blog.aisolution.uz/sitemap.xml",
+    host: "blog.aisolution.uz"
   };
 }
