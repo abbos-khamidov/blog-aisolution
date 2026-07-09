@@ -18,6 +18,17 @@ export const topicClusters = [
 
 export type TopicCluster = (typeof topicClusters)[number];
 
+/**
+ * Editorial filter for the homepage feed pills — separate from
+ * topicCluster (which is a content-pillar taxonomy almost everything
+ * currently sits under "mnenie" for). Optional: pieces that are neither a
+ * startup review nor a product review (macro, regulation, geopolitics)
+ * just omit it and only show up under "Все".
+ */
+export const postCategories = ["startup", "product"] as const;
+
+export type PostCategory = (typeof postCategories)[number];
+
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 const slugField = z
@@ -60,13 +71,17 @@ export const frontmatterSchema = z
     updatedAt: isoDateField.optional(),
     author: z.string().min(1, "must reference an author key from lib/authors.ts"),
     topicCluster: z.enum(topicClusters),
+    category: z.enum(postCategories).optional(),
     keywords: z
       .array(z.string().min(1))
       .min(1, "at least 1 keyword required")
       .max(8, "at most 8 keywords allowed"),
+    rating: z.number().min(1).max(10).default(7.4),
     serviceLink: publicPathField.optional(),
     translationOf: slugField.optional(),
     cover: publicPathField,
+    coverLabel: z.string().min(2).max(28).optional(),
+    coverLogo: publicPathField.optional(),
     draft: z.boolean().default(false)
   })
   .superRefine((data, ctx) => {

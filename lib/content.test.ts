@@ -14,7 +14,7 @@ describe("content pipeline (reads real content/ directory)", () => {
   it("loads the ru demo post and resolves its uz translation", () => {
     const post = getPostBySlug("ru", "vnedrenie-ii-otdel-prodazh");
     expect(post).toBeDefined();
-    expect(post?.author).toBe("abbas-khamidov");
+    expect(post?.author).toBe("aisolution");
     expect(post?.draft).toBe(false);
 
     const translation = post && getTranslation(post);
@@ -43,8 +43,8 @@ describe("content pipeline (reads real content/ directory)", () => {
   });
 
   it("getPostsByAuthor only returns that author's posts", () => {
-    const posts = getPostsByAuthor("abbas-khamidov", "ru");
-    expect(posts.every((post) => post.author === "abbas-khamidov")).toBe(true);
+    const posts = getPostsByAuthor("aisolution", "ru");
+    expect(posts.every((post) => post.author === "aisolution")).toBe(true);
     expect(posts.length).toBeGreaterThan(0);
   });
 

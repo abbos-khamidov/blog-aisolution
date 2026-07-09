@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import readline from "node:readline";
 import { listAuthors } from "../lib/authors";
-import { parseFrontmatter, topicClusters, type TopicCluster } from "../lib/schema";
+import { parseFrontmatter, postCategories, topicClusters, type PostCategory, type TopicCluster } from "../lib/schema";
 import { locales, type Locale } from "../lib/i18n";
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
@@ -95,6 +95,13 @@ async function main() {
 
     const topicCluster = await pickFromList<TopicCluster>(ask, "Тематический кластер:", topicClusters);
 
+    // Optional: only feeds the "Стартапы"/"Продукты" filter pills on the
+    // homepage feed. Пропусти, если материал не обзор конкретной компании
+    // или конкретного продукта (макро, регуляторка, геополитика и т.п.).
+    const categoryChoices = ["(нет)", ...postCategories] as const;
+    const categoryChoice = await pickFromList(ask, "Категория для фильтра (Стартап/Продукт), необязательно:", categoryChoices);
+    const category = categoryChoice === "(нет)" ? undefined : (categoryChoice as PostCategory);
+
     const baseSlug = slugify(title);
     if (!baseSlug) {
       throw new Error("Не удалось построить slug из заголовка — введи заголовок словами на русском или узбекском.");
@@ -109,6 +116,7 @@ async function main() {
       publishedAt: new Date().toISOString().slice(0, 10),
       author,
       topicCluster,
+      category,
       keywords,
       cover: "/images/aisolution-blog-hero.png",
       draft: true
@@ -131,6 +139,7 @@ async function main() {
       `publishedAt: "${frontmatter.publishedAt}"`,
       `author: "${author}"`,
       `topicCluster: "${topicCluster}"`,
+      ...(category ? [`category: "${category}"`] : []),
       `keywords: [${keywords.map((kw) => `"${kw}"`).join(", ")}]`,
       `cover: "${frontmatter.cover}"`,
       "draft: true",

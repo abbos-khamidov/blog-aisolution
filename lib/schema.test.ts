@@ -8,7 +8,7 @@ const validFrontmatter = {
   slug: "vnedrenie-ii-otdel-prodazh",
   lang: "ru",
   publishedAt: "2026-07-09",
-  author: "abbas-khamidov",
+  author: "aisolution",
   topicCluster: "vnedrenie",
   keywords: ["внедрение ии", "автоматизация продаж"],
   cover: "/covers/vnedrenie-ii-otdel-prodazh.png"

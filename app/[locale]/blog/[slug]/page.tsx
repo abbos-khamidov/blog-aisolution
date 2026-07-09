@@ -4,11 +4,13 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypePrettyCode from "rehype-pretty-code";
 import { ContentPostCard } from "@/components/ContentPostCard";
+import { PostCover } from "@/components/PostCover";
 import { ServiceCta } from "@/components/service-cta";
+import { SiteHeader } from "@/components/SiteHeader";
 import { resolveAuthor } from "@/lib/authors";
 import { clusterMeta, formatDate, getPostBySlug, getPublishedPosts, getRelatedPosts, getTranslation } from "@/lib/content";
 import { dictionary, getLocale, locales, type Locale } from "@/lib/i18n";
-import { buildArticleGraph } from "@/lib/jsonld";
+import { authorUrl, buildArticleGraph } from "@/lib/jsonld";
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
@@ -41,6 +43,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     languages["x-default"] = languages.ru;
   }
 
+  const author = resolveAuthor(post.author);
+
   return {
     title: post.title,
     description: post.description,
@@ -55,7 +59,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "article",
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt ?? post.publishedAt,
-      tags: post.keywords
+      tags: post.keywords,
+      authors: [authorUrl(post.lang, author.key)]
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: [post.cover]
     }
   };
 }
@@ -78,6 +89,7 @@ export default async function ArticlePage({ params }: Props) {
     <>
       {/* eslint-disable-next-line react/no-danger */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }} />
+      <SiteHeader locale={locale} compact />
       <main className="article-shell">
         <nav className="breadcrumbs" aria-label="Breadcrumb">
           <Link href={`/${locale}`}>{t.back}</Link>
@@ -88,7 +100,14 @@ export default async function ArticlePage({ params }: Props) {
         </nav>
 
         <article className="article-view">
-          <img className="article-hero" src={post.cover} alt="" />
+          <PostCover
+            cluster={post.topicCluster}
+            locale={locale}
+            cover={post.cover}
+            label={post.coverLabel}
+            logo={post.coverLogo}
+            size="hero"
+          />
           <div className="article-content">
             <div className="meta">
               <Link href={`/${locale}/cluster/${post.topicCluster}`}>{cluster.title[locale]}</Link>
@@ -121,6 +140,11 @@ export default async function ArticlePage({ params }: Props) {
               {post.keywords.map((keyword) => (
                 <span key={keyword}>#{keyword}</span>
               ))}
+            </div>
+
+            <div className="article-rating" aria-label={`${t.ratingLabel}: ${post.rating} / 10`}>
+              <span>{t.ratingLabel}</span>
+              <strong>{post.rating.toFixed(1)}/10</strong>
             </div>
           </div>
         </article>

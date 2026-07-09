@@ -53,5 +53,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }))
   );
 
-  return [...home, ...posts, ...clusterHubs, ...authorPages];
+  const ratingPages: MetadataRoute.Sitemap = locales.map((locale) => ({
+    url: `${BASE}/${locale}/rating`,
+    lastModified: new Date(),
+    alternates: {
+      languages: Object.fromEntries(locales.map((l) => [l, `${BASE}/${l}/rating`]))
+    }
+  }));
+
+  return [...home, ...posts, ...clusterHubs, ...authorPages, ...ratingPages];
 }

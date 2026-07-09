@@ -14,12 +14,12 @@ import {
 describe("jsonld @graph builders", () => {
   it("Organization.@id and Person.@id live on the main domain, not the blog", () => {
     expect(ORGANIZATION_ID.startsWith("https://aisolution.uz/")).toBe(true);
-    expect(personId("abbas-khamidov").startsWith("https://aisolution.uz/")).toBe(true);
+    expect(personId("aisolution").startsWith("https://aisolution.uz/")).toBe(true);
   });
 
   it("buildOrganizationNode.founder resolves to a real registered founder", () => {
     const org = buildOrganizationNode();
-    expect(org.founder["@id"]).toBe(personId("abbas-khamidov"));
+    expect(org.founder["@id"]).toBe(personId("aisolution"));
   });
 
   it("buildArticleGraph has zero dangling @id references for the demo post", () => {
@@ -47,7 +47,7 @@ describe("jsonld @graph builders", () => {
 
   it("buildWebsiteGraph and buildAuthorGraph also have zero dangling references", () => {
     expect(findDanglingReferences(buildWebsiteGraph())).toEqual([]);
-    expect(findDanglingReferences(buildAuthorGraph("abbas-khamidov"))).toEqual([]);
+    expect(findDanglingReferences(buildAuthorGraph("aisolution"))).toEqual([]);
   });
 
   it("every page's @graph contains exactly one Organization node with the shared @id", () => {
@@ -55,7 +55,7 @@ describe("jsonld @graph builders", () => {
     expect(post).toBeDefined();
     if (!post) return;
 
-    for (const graph of [buildArticleGraph(post), buildWebsiteGraph(), buildAuthorGraph("abbas-khamidov")]) {
+    for (const graph of [buildArticleGraph(post), buildWebsiteGraph(), buildAuthorGraph("aisolution")]) {
       const orgNodes = graph["@graph"].filter((node) => node["@type"] === "Organization");
       expect(orgNodes).toHaveLength(1);
       expect(orgNodes[0]["@id"]).toBe(ORGANIZATION_ID);

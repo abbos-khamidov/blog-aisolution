@@ -1,7 +1,7 @@
 export interface Author {
-  key: string; // 'abbas-khamidov' — matches Frontmatter.author and the URL /about/<key>
+  key: string; // matches Frontmatter.author and the URL /authors/<key>
   name: { ru: string; uz: string };
-  alternateName?: string; // e.g. "Adams Midov" — feeds Person.alternateName in jsonld.ts
+  alternateName?: string; // feeds Person.alternateName in jsonld.ts
   role: { ru: string; uz: string };
   bio: { ru: string; uz: string };
   image: string; // /authors/<key>.jpg, relative to /public
@@ -19,26 +19,21 @@ export interface Author {
  * not stored twice — see lib/jsonld.ts (задача 5).
  */
 export const authors: Record<string, Author> = {
-  "abbas-khamidov": {
-    key: "abbas-khamidov",
+  aisolution: {
+    key: "aisolution",
     name: {
-      ru: "Аббос Хамидов",
-      uz: "Abbos Xamidov"
+      ru: "AISOLUTION",
+      uz: "AISOLUTION"
     },
-    alternateName: "Adams Midov",
     role: {
-      ru: "Founder & CEO, AI Solution",
-      uz: "Founder & CEO, AI Solution"
+      ru: "Редакция AISOLUTION",
+      uz: "AISOLUTION tahririyati"
     },
     bio: {
-      // TODO(abbas): заменить на реальный bio-текст (2-3 предложения, ru)
-      ru: "TODO: bio на русском — заполнить перед публикацией первой статьи.",
-      // TODO(abbas): заменить на реальный bio-текст (2-3 предложения, uz)
-      uz: "TODO: bio o'zbek tilida — birinchi maqoladan oldin to'ldirish kerak."
+      ru: "AISOLUTION разбирает AI-продукты, стартапы и технологические рынки Центральной Азии без пресс-релизной ваты.",
+      uz: "AISOLUTION Markaziy Osiyodagi AI mahsulotlar, startaplar va texnologik bozorlarni press-reliz paxtasisiz tahlil qiladi."
     },
-    // TODO(abbas): положить файл в public/authors/abbas-khamidov.jpg
-    image: "/authors/abbas-khamidov.jpg",
-    // TODO(abbas): реальные ссылки — LinkedIn, GitHub, Telegram, Threads
+    image: "/brand/logo-dark-transparent.png",
     sameAs: [],
     isFounder: true
   }

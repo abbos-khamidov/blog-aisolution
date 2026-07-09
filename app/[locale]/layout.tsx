@@ -1,8 +1,22 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { Inter } from "next/font/google";
+import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import "../globals.css";
+import { NeuralBackground } from "@/components/NeuralBackground";
 import { dictionary, getLocale, locales, type Locale } from "@/lib/i18n";
+
+// Cyrillic subset is required for ru content — globals.css already declared
+// "Inter" as the intended font, but nothing was ever loading it, so every
+// visitor silently fell back to the OS system font. This makes the existing
+// declaration actually true instead of introducing a new one.
+const inter = Inter({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-inter",
+  display: "swap"
+});
 
 type Props = {
   children: ReactNode;
@@ -25,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       template: "%s — AI Solution Blog"
     },
     description: t.metaDescription,
-    keywords: ["aisolution", "ai solution", "aisolutions", "blog aisolution", "ai crm uzbekistan"],
+    keywords: ["aisolution", "ai solution", "startup evaluation", "оценка стартапов", "ai startups"],
     openGraph: {
       title: t.metaTitle,
       description: t.metaDescription,
@@ -34,6 +48,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: ["/images/aisolution-blog-hero.png"],
       type: "website",
       locale: locale === "ru" ? "ru_RU" : "uz_UZ"
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t.metaTitle,
+      description: t.metaDescription,
+      images: ["/images/aisolution-blog-hero.png"]
     },
     robots: {
       index: true,
@@ -53,10 +73,28 @@ export default async function LocaleLayout({ children, params }: Props) {
   const { locale: rawLocale } = await params;
   if (!locales.includes(rawLocale as Locale)) notFound();
   const locale = getLocale(rawLocale);
+  const t = dictionary[locale];
 
   return (
-    <html lang={locale}>
-      <body>{children}</body>
+    <html lang={locale} className={inter.variable}>
+      <body>
+        <NeuralBackground />
+        {children}
+        <footer className="site-footer">
+          <div className="footer-brand">
+            <span className="footer-mark">
+              <Image src="/brand/logo-dark-transparent.png" alt="" width={22} height={22} />
+            </span>
+            <div>
+              <strong>AI Solution Blog</strong>
+              <small>{t.footerTagline}</small>
+            </div>
+          </div>
+          <Link className="footer-link" href="https://aisolution.uz">
+            aisolution.uz <span aria-hidden="true">→</span>
+          </Link>
+        </footer>
+      </body>
     </html>
   );
 }

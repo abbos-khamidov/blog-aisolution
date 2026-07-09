@@ -2,11 +2,10 @@ import { describe, expect, it } from "vitest";
 import { authors, isKnownAuthor, listAuthors, resolveAuthor, UnknownAuthorError } from "./authors";
 
 describe("authors registry", () => {
-  it("has abbas-khamidov as the founder", () => {
-    const abbas = resolveAuthor("abbas-khamidov");
-    expect(abbas.isFounder).toBe(true);
-    expect(abbas.name.ru).toBe("Аббос Хамидов");
-    expect(abbas.alternateName).toBe("Adams Midov");
+  it("has aisolution as the founder", () => {
+    const author = resolveAuthor("aisolution");
+    expect(author.isFounder).toBe(true);
+    expect(author.name.ru).toBe("AISOLUTION");
   });
 
   it("throws UnknownAuthorError with a readable message for an unregistered key", () => {
@@ -15,12 +14,12 @@ describe("authors registry", () => {
       resolveAuthor("random-student");
     } catch (error) {
       expect((error as Error).message).toContain("random-student");
-      expect((error as Error).message).toContain("abbas-khamidov");
+      expect((error as Error).message).toContain("aisolution");
     }
   });
 
   it("isKnownAuthor reflects registry membership", () => {
-    expect(isKnownAuthor("abbas-khamidov")).toBe(true);
+    expect(isKnownAuthor("aisolution")).toBe(true);
     expect(isKnownAuthor("nobody")).toBe(false);
   });
 

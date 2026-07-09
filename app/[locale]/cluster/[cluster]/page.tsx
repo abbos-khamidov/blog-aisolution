@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ContentPostCard } from "@/components/ContentPostCard";
+import { SiteHeader } from "@/components/SiteHeader";
 import { clusterMeta, getClustersInUse, getPostsByCluster } from "@/lib/content";
 import { dictionary, getLocale, locales, type Locale } from "@/lib/i18n";
+import { buildWebsiteGraph } from "@/lib/jsonld";
 import { topicClusters, type TopicCluster } from "@/lib/schema";
 
 type Props = {
@@ -55,29 +57,35 @@ export default async function ClusterPage({ params }: Props) {
   const t = dictionary[locale];
   const meta = clusterMeta[rawCluster];
   const posts = getPostsByCluster(locale, rawCluster);
+  const graph = buildWebsiteGraph();
 
   return (
-    <main className="article-shell">
-      <nav className="breadcrumbs" aria-label="Breadcrumb">
-        <Link href={`/${locale}`}>{t.back}</Link>
-        <span aria-hidden="true"> / </span>
-        <span aria-current="page">{meta.title[locale]}</span>
-      </nav>
+    <>
+      {/* eslint-disable-next-line react/no-danger */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }} />
+      <SiteHeader locale={locale} compact />
+      <main className="article-shell">
+        <nav className="breadcrumbs" aria-label="Breadcrumb">
+          <Link href={`/${locale}`}>{t.back}</Link>
+          <span aria-hidden="true"> / </span>
+          <span aria-current="page">{meta.title[locale]}</span>
+        </nav>
 
-      <div className="section-head">
-        <h1>{meta.title[locale]}</h1>
-        <p className="section-copy">{meta.description[locale]}</p>
-      </div>
-
-      {posts.length > 0 ? (
-        <div className="post-grid">
-          {posts.map((post) => (
-            <ContentPostCard key={post.slug} post={post} locale={locale} />
-          ))}
+        <div className="section-head">
+          <h1>{meta.title[locale]}</h1>
+          <p className="section-copy">{meta.description[locale]}</p>
         </div>
-      ) : (
-        <p className="section-copy">{t.clusterEmpty}</p>
-      )}
-    </main>
+
+        {posts.length > 0 ? (
+          <div className="post-grid">
+            {posts.map((post) => (
+              <ContentPostCard key={post.slug} post={post} locale={locale} />
+            ))}
+          </div>
+        ) : (
+          <p className="section-copy">{t.clusterEmpty}</p>
+        )}
+      </main>
+    </>
   );
 }

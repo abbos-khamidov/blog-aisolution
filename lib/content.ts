@@ -13,61 +13,94 @@ export type Post = Frontmatter & {
   readMinutes: number;
 };
 
+export const clusterAccent: Record<TopicCluster, string> = {
+  vnedrenie: "#3aa0ff",
+  prodazhi: "#ff8a3d",
+  integratsii: "#2fd489",
+  "nlp-uz": "#b98bff",
+  otrasli: "#f5b642",
+  ekonomika: "#41c9e2",
+  obuchenie: "#ff6fa8",
+  mnenie: "#8f9bb3"
+};
+
+export const clusterCoverImage: Record<TopicCluster, string> = {
+  vnedrenie: "/covers/startup-team.png",
+  prodazhi: "/covers/growth-dashboard.png",
+  integratsii: "/covers/product-lab.png",
+  "nlp-uz": "/covers/product-lab.png",
+  otrasli: "/covers/startup-team.png",
+  ekonomika: "/covers/market-money.png",
+  obuchenie: "/covers/startup-team.png",
+  mnenie: "/covers/market-money.png"
+};
+
+const clusterDefaultRating: Record<TopicCluster, number> = {
+  vnedrenie: 8.2,
+  prodazhi: 7.8,
+  integratsii: 8.0,
+  "nlp-uz": 8.4,
+  otrasli: 7.6,
+  ekonomika: 8.1,
+  obuchenie: 7.7,
+  mnenie: 8.6
+};
+
 export const clusterMeta: Record<TopicCluster, { title: Record<Locale, string>; description: Record<Locale, string> }> = {
   vnedrenie: {
-    title: { ru: "Внедрение ИИ в бизнес", uz: "Biznesga AI joriy etish" },
+    title: { ru: "Оценка стартапов", uz: "Startap bahosi" },
     description: {
-      ru: "Как компании в Узбекистане реально внедряют ИИ: шаги, ошибки, сроки.",
-      uz: "O'zbekistondagi kompaniyalar AIni qanday joriy etyapti: qadamlar, xatolar, muddatlar."
+      ru: "Продукт, команда, рынок, деньги: быстро отделяем бизнес от презентации.",
+      uz: "Mahsulot, jamoa, bozor, pul: biznesni pitchdan tez ajratamiz."
     }
   },
   prodazhi: {
-    title: { ru: "ИИ в продажах и CRM", uz: "Savdo va CRMda AI" },
+    title: { ru: "Go-to-market и рост", uz: "Go-to-market va o'sish" },
     description: {
-      ru: "Автоматизация продаж, аналитика лидов, контроль качества звонков и сделок.",
-      uz: "Savdo avtomatlashtiruvi, lidlar analitikasi, qo'ng'iroq va bitimlar sifatini nazorat qilish."
+      ru: "Кому продают, как растут и где воронка держится на честном спросе.",
+      uz: "Kimga sotadi, qanday o'sadi va funnel qayerda real talabga suyanadi."
     }
   },
   integratsii: {
-    title: { ru: "Интеграции", uz: "Integratsiyalar" },
+    title: { ru: "Продукт и стек", uz: "Mahsulot va stack" },
     description: {
-      ru: "1С, Битрикс24, OnlinePBX и другие системы — как связать их с ИИ без хаоса.",
-      uz: "1C, Bitrix24, OnlinePBX va boshqa tizimlar — ularni AI bilan tartibli bog'lash."
+      ru: "Что реально собрано, что только нарисовано и где технология не выдержит рынок.",
+      uz: "Nima real yig'ilgan, nima faqat chizilgan va texnologiya qayerda bozorga dosh bermaydi."
     }
   },
   "nlp-uz": {
-    title: { ru: "Узбекский язык и NLP", uz: "O'zbek tili va NLP" },
+    title: { ru: "AI-угол", uz: "AI burchagi" },
     description: {
-      ru: "Распознавание речи, NLP и работа ИИ с узбекским языком.",
-      uz: "Nutqni tanish, NLP va AIning o'zbek tili bilan ishlashi."
+      ru: "Где AI усиливает продукт, а где его приклеили ради красивого слайда.",
+      uz: "AI qayerda mahsulotni kuchaytiradi, qayerda faqat chiroyli slayd uchun yopishtirilgan."
     }
   },
   otrasli: {
-    title: { ru: "Отраслевые кейсы", uz: "Soha keyslari" },
+    title: { ru: "Рынки и ниши", uz: "Bozorlar va nishalar" },
     description: {
-      ru: "Стройка, ритейл, ювелирка и другие отрасли: что в них меняет ИИ.",
-      uz: "Qurilish, chakana savdo, zargarlik va boshqa sohalar: AI ularda nimani o'zgartiryapti."
+      ru: "Большой ли рынок, больная ли боль и есть ли там место новому игроку.",
+      uz: "Bozor kattami, og'riq haqiqiymi va yangi o'yinchiga joy bormi."
     }
   },
   ekonomika: {
-    title: { ru: "Экономика ИИ", uz: "AI iqtisodiyoti" },
+    title: { ru: "Деньги и оценка", uz: "Pul va baholash" },
     description: {
-      ru: "Стоимость, ROI и реальные сроки окупаемости внедрения ИИ.",
-      uz: "AI joriy etish narxi, ROI va real qoplanish muddatlari."
+      ru: "Выручка, юнит-экономика, runway и valuation без магии в Excel.",
+      uz: "Tushum, unit economics, runway va valuation — Excel sehrisiz."
     }
   },
   obuchenie: {
-    title: { ru: "Обучение и кадры", uz: "O'qitish va kadrlar" },
+    title: { ru: "Команда и талант", uz: "Jamoa va talent" },
     description: {
-      ru: "ML, обучение команд и то, как готовить кадры для ИИ-проектов.",
-      uz: "ML, jamoalarni o'qitish va AI loyihalari uchun kadrlar tayyorlash."
+      ru: "Кто строит, кто продает, кто тащит, а кто просто красиво рассказывает.",
+      uz: "Kim quradi, kim sotadi, kim tortadi, kim faqat chiroyli gapiradi."
     }
   },
   mnenie: {
-    title: { ru: "Колонки и позиция", uz: "Sharhlar va pozitsiya" },
+    title: { ru: "Вердикты", uz: "Verdictlar" },
     description: {
-      ru: "Личная позиция AI Solution по спорным и важным темам рынка ИИ.",
-      uz: "AI bozoridagi muhim va bahsli mavzular bo'yicha AI Solution shaxsiy pozitsiyasi."
+      ru: "Коротко: берем, смотрим, режем лишнее и говорим, есть ли там мясо.",
+      uz: "Qisqa: olamiz, ko'ramiz, ortiqchasini kesamiz va ichida go'sht bormi aytamiz."
     }
   }
 };
@@ -112,6 +145,7 @@ function loadPost(locale: Locale, fileName: string): Post {
 
   return {
     ...frontmatter,
+    rating: typeof data.rating === "number" ? frontmatter.rating : clusterDefaultRating[frontmatter.topicCluster],
     content: content.trim(),
     readMinutes: estimateReadMinutes(content)
   };
@@ -129,7 +163,14 @@ export function getPublishedPosts(locale?: Locale): Post[] {
   return loadAllPosts()
     .filter((post) => !post.draft)
     .filter((post) => (locale ? post.lang === locale : true))
-    .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1));
+    .sort((a, b) => {
+      if (a.publishedAt !== b.publishedAt) return a.publishedAt < b.publishedAt ? 1 : -1;
+      return b.rating - a.rating;
+    });
+}
+
+export function getRatedPosts(locale: Locale): Post[] {
+  return getPublishedPosts(locale).sort((a, b) => b.rating - a.rating || (a.publishedAt < b.publishedAt ? 1 : -1));
 }
 
 export function getPostBySlug(locale: Locale, slug: string): Post | undefined {

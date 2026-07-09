@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PostCover } from "./PostCover";
 import { resolveAuthor } from "@/lib/authors";
 import { clusterMeta, formatDate, type Post } from "@/lib/content";
 import { dictionary, type Locale } from "@/lib/i18n";
@@ -6,6 +7,7 @@ import { dictionary, type Locale } from "@/lib/i18n";
 type Props = {
   post: Post;
   locale: Locale;
+  badge?: "new";
 };
 
 /**
@@ -15,14 +17,32 @@ type Props = {
  * one stays independent so it doesn't collide with in-progress design work
  * on that file.
  */
-export function ContentPostCard({ post, locale }: Props) {
+export function ContentPostCard({ post, locale, badge }: Props) {
   const t = dictionary[locale];
   const author = resolveAuthor(post.author);
+  const isAisolutionCard = post.coverLabel === "AISOLUTION";
 
   return (
-    <Link className="post-card" href={`/${locale}/blog/${post.slug}`}>
+    <Link className={`post-card${isAisolutionCard ? " post-card-active" : ""}`} href={`/${locale}/blog/${post.slug}`}>
+      {isAisolutionCard && (
+        <>
+          <span className="active-card-arrow active-card-arrow-top" aria-hidden="true">
+            -&gt;
+          </span>
+          <span className="active-card-arrow active-card-arrow-bottom" aria-hidden="true">
+            -&gt;
+          </span>
+        </>
+      )}
       <div className="post-card-media">
-        <img src={post.cover} alt="" />
+        {badge === "new" && <span className="post-badge">{t.badgeNew}</span>}
+        <PostCover
+          cluster={post.topicCluster}
+          locale={locale}
+          cover={post.cover}
+          label={post.coverLabel}
+          logo={post.coverLogo}
+        />
       </div>
       <div className="post-card-content">
         <div>
@@ -38,6 +58,9 @@ export function ContentPostCard({ post, locale }: Props) {
         </div>
         <div className="card-bottom">
           <span>{author.name[locale]}</span>
+          <span className="rating-chip" aria-label={`${t.ratingLabel}: ${post.rating} / 10`}>
+            {t.ratingShort} {post.rating.toFixed(1)}
+          </span>
           <span className="read-more">{t.read} -&gt;</span>
         </div>
       </div>

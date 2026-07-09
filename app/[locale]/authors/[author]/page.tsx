@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ContentPostCard } from "@/components/ContentPostCard";
+import { SiteHeader } from "@/components/SiteHeader";
 import { isKnownAuthor, listAuthors, resolveAuthor } from "@/lib/authors";
 import { getPostsByAuthor } from "@/lib/content";
 import { dictionary, getLocale, locales, type Locale } from "@/lib/i18n";
@@ -52,6 +54,7 @@ export default async function AuthorPage({ params }: Props) {
     <>
       {/* eslint-disable-next-line react/no-danger */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }} />
+      <SiteHeader locale={locale} compact />
       <main className="article-shell">
         <nav className="breadcrumbs" aria-label="Breadcrumb">
           <Link href={`/${locale}`}>{t.back}</Link>
@@ -60,7 +63,7 @@ export default async function AuthorPage({ params }: Props) {
         </nav>
 
         <div className="section-head">
-          <img className="author-photo" src={author.image} alt={author.name[locale]} />
+          <Image className="author-photo" src={author.image} alt={author.name[locale]} width={84} height={84} />
           <h1>{author.name[locale]}</h1>
           <p className="section-copy">{author.role[locale]}</p>
           <p className="section-copy">{author.bio[locale]}</p>

@@ -1,49 +1,94 @@
 import Link from "next/link";
 import { ContentPostCard } from "./ContentPostCard";
+import { Hero } from "./Hero";
+import { Reveal } from "./Reveal";
 import { SiteHeader } from "./SiteHeader";
 import type { Locale } from "@/lib/i18n";
 import { dictionary } from "@/lib/i18n";
 import { clusterMeta, getClustersInUse, getPublishedPosts } from "@/lib/content";
 
-export function BlogHome({ locale }: { locale: Locale }) {
+const feedFilters = [
+  { key: "all", labels: { ru: "Все", uz: "Barchasi" } },
+  { key: "aisolution", labels: { ru: "AISOLUTION", uz: "AISOLUTION" } },
+  { key: "startup", labels: { ru: "Стартапы", uz: "Startaplar" } },
+  { key: "product", labels: { ru: "Продукты", uz: "Mahsulotlar" } },
+  { key: "education", labels: { ru: "AI обучение", uz: "AI ta'lim" } }
+] as const;
+
+type FeedFilter = (typeof feedFilters)[number]["key"];
+
+function getFeedFilter(value?: string): FeedFilter {
+  return feedFilters.some((filter) => filter.key === value) ? (value as FeedFilter) : "all";
+}
+
+function postMatchesFilter(post: ReturnType<typeof getPublishedPosts>[number], filter: FeedFilter): boolean {
+  if (filter === "all") return true;
+  if (filter === "aisolution") return post.coverLabel === "AISOLUTION";
+  if (filter === "startup" || filter === "product") return post.category === filter;
+  return post.coverLabel === "AI EDUCATION";
+}
+
+export function BlogHome({ locale, activeFilter }: { locale: Locale; activeFilter?: string }) {
   const t = dictionary[locale];
-  const posts = getPublishedPosts(locale);
+  const filter = getFeedFilter(activeFilter);
+  const posts = getPublishedPosts(locale).filter((post) => postMatchesFilter(post, filter));
   const clusters = getClustersInUse(locale);
+  const tickerSignals =
+    locale === "ru"
+      ? [
+          "★ ВАШ СТАРТАП МОЖЕТ БЫТЬ ТУТ",
+          "★ ПРОДУКТ НА РАЗБОР",
+          "★ PITCH-DECK БЕЗ МАГИИ",
+          "★ КОМАНДА, РЫНОК, ДЕНЬГИ",
+          "★ VERDICT БЕЗ САХАРА",
+          "★ AI SOLUTION SCOUT"
+        ]
+      : [
+          "★ STARTAPINGIZ SHU YERDA BO'LISHI MUMKIN",
+          "★ MAHSULOT RAZBORDA",
+          "★ PITCH-DECK SEHRSIZ",
+          "★ JAMOA, BOZOR, PUL",
+          "★ SHAKARSIZ VERDICT",
+          "★ AI SOLUTION SCOUT"
+        ];
 
   return (
     <>
       <SiteHeader locale={locale} />
       <main>
-        <section className="hero">
-          <div className="hero-content">
-            <div className="hero-label-row">
-              <p className="kicker">{t.heroKicker}</p>
-              <span className="signal-pill">AI / Central Asia</span>
-            </div>
-            <h1>{t.heroTitle}</h1>
-            <p className="hero-copy">{t.heroCopy}</p>
-            <div className="hero-actions">
-              <a className="button primary" href="#feed">
-                {t.heroCta}
-              </a>
-              <a className="button ghost" href="#position">
-                {t.heroSecondary}
-              </a>
-            </div>
-          </div>
-          <div className="hero-visual">
-            <img src="/images/aisolution-blog-hero.png" alt="AI Solution" />
-            <img className="hero-motto hero-motto-light" src="/brand/motto-light-transparent.png" alt="AI Solution motto" />
-            <img className="hero-motto hero-motto-dark" src="/brand/motto-dark-transparent.png" alt="AI Solution motto" />
-          </div>
+        <Hero locale={locale} />
+
+        <section className="ticker-invite" aria-label={t.tickerInvite}>
+          <p>{t.tickerInvite}</p>
+          <svg className="ticker-arrow" viewBox="0 0 170 88" fill="none" aria-hidden="true">
+            <path
+              d="M12 12 C54 6 73 34 61 52 C47 73 90 83 142 54"
+              stroke="currentColor"
+              strokeWidth="6"
+              strokeLinecap="round"
+            />
+            <path
+              d="M129 45 L149 51 L139 70"
+              stroke="currentColor"
+              strokeWidth="6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </section>
 
         <section className="ticker" aria-label="Editorial signals">
-          <div>
-            <span>AISOLUTION</span>
-            <span>AI Solution</span>
-            <span>aisolutions</span>
-            <span>AI CRM Uzbekistan</span>
+          <div className="ticker-track">
+            <div className="ticker-group">
+              {tickerSignals.map((signal) => (
+                <span key={signal}>{signal}</span>
+              ))}
+            </div>
+            <div className="ticker-group" aria-hidden="true">
+              {tickerSignals.map((signal) => (
+                <span key={signal}>{signal}</span>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -53,7 +98,7 @@ export function BlogHome({ locale }: { locale: Locale }) {
             <h2>{t.clustersTitle}</h2>
             <p className="section-copy">{t.clustersCopy}</p>
           </div>
-          <div className="radar-grid">
+          <Reveal className="radar-grid">
             {clusters.map((cluster, index) => (
               <Link key={cluster} className="cluster-card" href={`/${locale}/cluster/${cluster}`}>
                 <span>{String(index + 1).padStart(2, "0")}</span>
@@ -61,7 +106,7 @@ export function BlogHome({ locale }: { locale: Locale }) {
                 <p>{clusterMeta[cluster].description[locale]}</p>
               </Link>
             ))}
-          </div>
+          </Reveal>
         </section>
 
         <section className="feed-section" id="feed">
@@ -71,27 +116,40 @@ export function BlogHome({ locale }: { locale: Locale }) {
               <h2>{t.feedTitle}</h2>
               <p className="section-copy">{t.feedCopy}</p>
             </div>
+            <nav className="filter-pills" aria-label="Feed filter">
+              {feedFilters.map((item) => (
+                <Link
+                  key={item.key}
+                  className={filter === item.key ? "is-active" : ""}
+                  href={item.key === "all" ? `/${locale}#feed` : `/${locale}?filter=${item.key}#feed`}
+                >
+                  {item.labels[locale]}
+                </Link>
+              ))}
+            </nav>
           </div>
-          <div className="post-grid">
-            {posts.map((post) => (
-              <ContentPostCard key={post.slug} post={post} locale={locale} />
+          <Reveal className="post-grid">
+            {posts.map((post, index) => (
+              <ContentPostCard key={post.slug} post={post} locale={locale} badge={index === 0 ? "new" : undefined} />
             ))}
-          </div>
+          </Reveal>
         </section>
 
         <section className="position" id="position">
-          <div>
-            <p className="kicker">{t.positionKicker}</p>
-            <h2>{t.positionTitle}</h2>
-          </div>
-          <p>{t.positionCopy}</p>
+          <Reveal className="position-inner" y={20}>
+            <div>
+              <p className="kicker">{t.positionKicker}</p>
+              <h2>{t.positionTitle}</h2>
+            </div>
+            <div className="position-aside">
+              <p>{t.positionCopy}</p>
+              <p className="sticker" style={{ marginTop: 20 }}>
+                {t.positionSticker}
+              </p>
+            </div>
+          </Reveal>
         </section>
       </main>
-
-      <footer className="site-footer">
-        <span>AI Solution Blog</span>
-        <Link href="https://aisolution.uz">aisolution.uz</Link>
-      </footer>
     </>
   );
 }
