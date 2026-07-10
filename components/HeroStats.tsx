@@ -2,12 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Locale } from "@/lib/i18n";
-import { dictionary } from "@/lib/i18n";
+import { dictionary, yearStatLabel } from "@/lib/i18n";
 
 type Stats = {
   today: number;
   year: number;
   total: number;
+  yearNumber: number;
 };
 
 type Props = {
@@ -77,19 +78,20 @@ export function HeroStats({ locale, stats, survival }: Props) {
   const tiles = useMemo(
     () => [
       { label: t.statsTodayLabel, value: stats.today, survived: survival.today },
-      { label: t.statsYearLabel, value: stats.year, survived: survival.year },
+      { label: yearStatLabel(locale, stats.yearNumber), value: stats.year, survived: survival.year },
       { label: t.statsTotalLabel, value: stats.total, survived: survival.total }
     ],
     [
+      locale,
       stats.today,
       stats.year,
       stats.total,
+      stats.yearNumber,
       survival.today,
       survival.year,
       survival.total,
       t.statsTodayLabel,
-      t.statsTotalLabel,
-      t.statsYearLabel
+      t.statsTotalLabel
     ]
   );
 

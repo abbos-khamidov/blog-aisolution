@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Brand } from "./Brand";
+import { PushSubscribe } from "./PushSubscribe";
 import { ThemeToggle } from "./ThemeToggle";
 import type { Locale } from "@/lib/i18n";
 import { dictionary } from "@/lib/i18n";
@@ -34,6 +35,7 @@ export function SiteHeader({ locale, compact = false }: Props) {
         </nav>
       )}
       <div className="header-actions">
+        <PushSubscribe locale={locale} />
         <ThemeToggle />
         <div className="lang-switch" aria-label="Language">
           <Link className={locale === "ru" ? "is-active" : ""} href="/ru">

@@ -76,14 +76,26 @@ a {
   color: #07070c;
 }
 
-.selection-clear-button {
+/* persistent text highlight inserted by the selection control */
+.selection-mark {
+  background: rgb(255 91 31 / 34%);
+  color: inherit;
+  border-radius: 0.12em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Specificity note: see .subscribe-popup below — same fight against
+   "body > :not(.neural-background)" for position:fixed, same fix. */
+.selection-clear-button.selection-clear-button {
   position: fixed;
   right: 50%;
   bottom: 18px;
-  z-index: 60;
+  z-index: 9999;
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  cursor: pointer;
   border: 2px solid var(--line);
   border-radius: 999px;
   padding: 10px 16px;
@@ -92,20 +104,118 @@ a {
   font-size: 13px;
   font-weight: 950;
   box-shadow: 4px 4px 0 0 #07070c;
-  opacity: 0.8;
-  transform: translate(50%, 0);
-  pointer-events: auto;
-  transition: opacity 140ms ease, transform 140ms ease;
+  opacity: 0;
+  transform: translate(50%, 12px);
+  pointer-events: none;
+  transition: opacity 140ms ease, transform 140ms ease, box-shadow 140ms ease;
 }
 
-.selection-clear-button.is-active {
+.selection-clear-button.selection-clear-button.is-active {
   opacity: 1;
+  transform: translate(50%, 0);
+  pointer-events: auto;
 }
 
 .selection-clear-button svg {
   width: 16px;
   height: 16px;
   flex: 0 0 auto;
+}
+
+.selection-clear-button.is-active:hover {
+  transform: translate(50%, -2px);
+  box-shadow: 6px 6px 0 0 #07070c;
+}
+
+/* ---------- subscribe popup ---------- */
+
+/* Specificity note: "body > :not(.neural-background)" forces
+   position:relative/z-index:1 on every direct child of <body> (to lift
+   content above the fixed background). This popup is one of those direct
+   children but genuinely needs position:fixed, so ".subscribe-popup" alone
+   loses that cascade fight — the doubled class beats it without touching
+   the shared body-level rule. */
+.subscribe-popup.subscribe-popup {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 55;
+  width: min(340px, calc(100vw - 40px));
+  border: 3px solid #07070c;
+  border-radius: var(--radius);
+  background: var(--brand-cream);
+  color: #07070c;
+  padding: 20px 22px 22px;
+  box-shadow: 8px 8px 0 0 #07070c;
+  animation: subscribe-popup-in 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes subscribe-popup-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) rotate(-1deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(-1deg);
+  }
+}
+
+.subscribe-popup-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 2px solid #07070c;
+  border-radius: 999px;
+  background: #fff;
+  color: #07070c;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 140ms ease;
+}
+
+.subscribe-popup-close:hover {
+  transform: rotate(90deg);
+}
+
+.subscribe-popup .kicker {
+  margin-bottom: 10px;
+}
+
+.subscribe-popup strong {
+  display: block;
+  padding-right: 20px;
+  font-size: 20px;
+  font-weight: 950;
+  line-height: 1.15;
+}
+
+.subscribe-popup p {
+  margin-top: 8px;
+  color: #4a4a58;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.42;
+}
+
+.subscribe-popup .button {
+  margin-top: 14px;
+  width: 100%;
+  justify-content: center;
+}
+
+@media (max-width: 620px) {
+  .subscribe-popup {
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    width: auto;
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -129,7 +239,7 @@ a {
   }
 
   .selection-clear-button {
-    cursor: url("/cursor-pencil.svg") 5 23, pointer;
+    cursor: pointer;
   }
 }
 
@@ -296,7 +406,8 @@ p {
 
 .lang-switch,
 .filter-pills,
-.theme-toggle {
+.theme-toggle,
+.push-subscribe {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -309,7 +420,8 @@ p {
 .lang-switch a,
 .filter-pills a,
 .filter-pills button,
-.theme-toggle {
+.theme-toggle,
+.push-subscribe {
   min-height: 38px;
   border: 0;
   border-radius: 999px;
@@ -329,12 +441,23 @@ p {
   transition: background 140ms ease, color 140ms ease;
 }
 
-.theme-toggle {
+.theme-toggle,
+.push-subscribe {
   gap: 7px;
   background: var(--surface);
   padding: 8px 12px;
   font-size: 12px;
   font-weight: 900;
+}
+
+.push-subscribe.is-active {
+  border-color: var(--brand-blue);
+  color: var(--brand-blue);
+}
+
+.push-subscribe:disabled {
+  cursor: wait;
+  opacity: 0.6;
 }
 
 .theme-toggle span {

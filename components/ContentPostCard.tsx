@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { PostCover } from "./PostCover";
 import { resolveAuthor } from "@/lib/authors";
-import { clusterMeta, formatDate, type Post } from "@/lib/content";
+import { clusterMeta, formatDate, getVerdict, type Post } from "@/lib/content";
 import { dictionary, type Locale } from "@/lib/i18n";
 
 type Props = {
@@ -9,12 +9,6 @@ type Props = {
   locale: Locale;
   badge?: "new";
 };
-
-function getVerdict(rating: number): "up" | "average" | "down" {
-  if (rating >= 7.5) return "up";
-  if (rating >= 5.5) return "average";
-  return "down";
-}
 
 /**
  * Card for posts sourced from lib/content.ts (the MDX/zod pipeline).

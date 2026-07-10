@@ -183,7 +183,10 @@ function getTashkentDateKey(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
-export function getStartupStats(locale: Locale, now = new Date()): { today: number; year: number; total: number } {
+export function getStartupStats(
+  locale: Locale,
+  now = new Date()
+): { today: number; year: number; total: number; yearNumber: number } {
   const posts = getPublishedPosts(locale).filter((post) => post.category === "startup");
   const todayKey = getTashkentDateKey(now);
   const yearKey = todayKey.slice(0, 4);
@@ -191,7 +194,8 @@ export function getStartupStats(locale: Locale, now = new Date()): { today: numb
   return {
     today: posts.filter((post) => post.publishedAt === todayKey).length,
     year: posts.filter((post) => post.publishedAt.startsWith(yearKey)).length,
-    total: posts.length
+    total: posts.length,
+    yearNumber: Number(yearKey)
   };
 }
 
@@ -208,7 +212,7 @@ export function getVerdict(rating: number): "up" | "average" | "down" {
 export function getStartupSurvivalStats(
   locale: Locale,
   now = new Date()
-): { today: number; year: number; total: number } {
+): { today: number; year: number; total: number; yearNumber: number } {
   const posts = getPublishedPosts(locale).filter(
     (post) => post.category === "startup" && getVerdict(post.rating) === "up"
   );
@@ -218,7 +222,8 @@ export function getStartupSurvivalStats(
   return {
     today: posts.filter((post) => post.publishedAt === todayKey).length,
     year: posts.filter((post) => post.publishedAt.startsWith(yearKey)).length,
-    total: posts.length
+    total: posts.length,
+    yearNumber: Number(yearKey)
   };
 }
 

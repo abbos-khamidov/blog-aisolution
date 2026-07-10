@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { dictionary, type Locale } from "@/lib/i18n";
+import { dictionary, yearStatLabel, type Locale } from "@/lib/i18n";
 
-type Stats = { today: number; year: number; total: number };
+type Stats = { today: number; year: number; total: number; yearNumber: number };
 
 const barPatterns = [
   [30, 55, 75, 100],
@@ -99,7 +99,7 @@ export function HeroIllustration({
         <div className="hero-illustration-stat-row">
           <div>
             <b>{numberFormat.format(stats.year)}</b>
-            <small>{t.statsYearLabel}</small>
+            <small>{yearStatLabel(locale, stats.yearNumber)}</small>
           </div>
           <div>
             <b>{numberFormat.format(stats.today)}</b>

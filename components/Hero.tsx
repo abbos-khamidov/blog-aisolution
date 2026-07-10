@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { HeroIllustration } from "./HeroIllustration";
 import { dictionary, type Locale } from "@/lib/i18n";
 
-type Stats = { today: number; year: number; total: number };
+type Stats = { today: number; year: number; total: number; yearNumber: number };
 
 export function Hero({ locale, stats, survival }: { locale: Locale; stats: Stats; survival: Stats }) {
   const t = dictionary[locale];

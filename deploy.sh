@@ -10,3 +10,6 @@ cp -r public .next/standalone/public
 
 pm2 restart aisolution-blog --update-env
 pm2 save
+
+# push notifications for posts published since the last deploy
+npm run notify:new-posts

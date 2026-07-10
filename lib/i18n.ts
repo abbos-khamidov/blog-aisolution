@@ -47,7 +47,6 @@ export const dictionary = {
     statsKicker: "быстрые цифры",
     statsTitle: "Новые стартапы в ленте",
     statsTodayLabel: "за сегодня",
-    statsYearLabel: "за год",
     statsTotalLabel: "всего startup",
     statsEcosystemPrefix: "рынок целиком:",
     statsEcosystemValue: "750+",
@@ -57,6 +56,13 @@ export const dictionary = {
     heroVisualSurvivedLabel: "выжили наш разбор",
     statsSurvivedBadge: "выжили",
     selectionClearLabel: "Очистить выделение",
+    pushSubscribeLabel: "Уведомления",
+    pushSubscribedLabel: "Подписан",
+    popupKicker: "не пропусти",
+    popupTitle: "Разборы стартапов — прямо как выходят",
+    popupCopy: "Публикуем разбор — присылаем уведомление в браузер. Без спама и рассылок раз в месяц ни о чём.",
+    popupCta: "Подписаться",
+    popupClose: "Закрыть",
     footerTagline: "стартапы / AI / вердикты",
     read: "читать",
     min: "мин",
@@ -128,7 +134,6 @@ export const dictionary = {
     statsKicker: "tezkor raqamlar",
     statsTitle: "Lentadagi yangi startaplar",
     statsTodayLabel: "bugun",
-    statsYearLabel: "yil davomida",
     statsTotalLabel: "jami startup",
     statsEcosystemPrefix: "butun bozor:",
     statsEcosystemValue: "750+",
@@ -138,6 +143,13 @@ export const dictionary = {
     heroVisualSurvivedLabel: "razborimizdan omon qoldi",
     statsSurvivedBadge: "omon qoldi",
     selectionClearLabel: "Tanlovni tozalash",
+    pushSubscribeLabel: "Bildirishnoma",
+    pushSubscribedLabel: "Obuna bo'lindi",
+    popupKicker: "qochirmang",
+    popupTitle: "Startap razborlari — chiqqan zahoti",
+    popupCopy: "Razbor chiqsa — brauzerga bildirishnoma yuboramiz. Spamsiz, oyiga bir marta hech narsa haqida xatsiz.",
+    popupCta: "Obuna bo'lish",
+    popupClose: "Yopish",
     footerTagline: "startaplar / AI / verdict",
     read: "o'qish",
     min: "daq",
@@ -168,6 +180,14 @@ export const dictionary = {
     badgeNew: "Yangi"
   }
 } satisfies Record<Locale, Record<string, string>>;
+
+/**
+ * "3 за год" doesn't read as a real fact — "3 за 2026" does. Used wherever
+ * a stat tile needs to caption a per-year count with the actual year.
+ */
+export function yearStatLabel(locale: Locale, year: number): string {
+  return locale === "uz" ? `${year}-yilda` : `за ${year}`;
+}
 
 export function getLocale(value?: string): Locale {
   return locales.includes(value as Locale) ? (value as Locale) : defaultLocale;
