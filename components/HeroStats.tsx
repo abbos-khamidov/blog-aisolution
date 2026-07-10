@@ -13,6 +13,7 @@ type Stats = {
 type Props = {
   locale: Locale;
   stats: Stats;
+  survival: Stats;
 };
 
 function useCountUp(target: number, active = true) {
@@ -55,7 +56,7 @@ function StatTile({ label, value, locale }: { label: string; value: number; loca
   );
 }
 
-export function HeroStats({ locale, stats }: Props) {
+export function HeroStats({ locale, stats, survival }: Props) {
   const t = dictionary[locale];
   const tiles = useMemo(
     () => [
@@ -65,17 +66,43 @@ export function HeroStats({ locale, stats }: Props) {
     ],
     [stats.today, stats.year, stats.total, t.statsTodayLabel, t.statsTotalLabel, t.statsYearLabel]
   );
+  const survivalTiles = useMemo(
+    () => [
+      { label: t.statsSurvivedTodayLabel, value: survival.today },
+      { label: t.statsSurvivedYearLabel, value: survival.year },
+      { label: t.statsSurvivedTotalLabel, value: survival.total }
+    ],
+    [
+      survival.today,
+      survival.year,
+      survival.total,
+      t.statsSurvivedTodayLabel,
+      t.statsSurvivedYearLabel,
+      t.statsSurvivedTotalLabel
+    ]
+  );
 
   return (
     <section className="hero-stats" aria-label={t.statsTitle}>
-      <div className="hero-stats-head">
-        <p className="kicker">{t.statsKicker}</p>
-        <h2>{t.statsTitle}</h2>
+      <div className="hero-stats-top">
+        <div className="hero-stats-head">
+          <p className="kicker">{t.statsKicker}</p>
+          <h2>{t.statsTitle}</h2>
+        </div>
+        <div className="hero-stats-grid" role="list">
+          {tiles.map((tile) => (
+            <StatTile key={tile.label} label={tile.label} value={tile.value} locale={locale} />
+          ))}
+          {survivalTiles.map((tile) => (
+            <StatTile key={tile.label} label={tile.label} value={tile.value} locale={locale} accent />
+          ))}
+        </div>
       </div>
-      <div className="hero-stats-grid" role="list">
-        {tiles.map((tile) => (
-          <StatTile key={tile.label} label={tile.label} value={tile.value} locale={locale} />
-        ))}
+      <div className="hero-stats-ecosystem">
+        <strong>{t.statsEcosystemValue}</strong>
+        <span>{t.statsEcosystemLabel}</span>
+        <em>{t.statsEcosystemGrowth}</em>
+        <cite>{t.statsEcosystemSource}</cite>
       </div>
     </section>
   );

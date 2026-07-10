@@ -1,7 +1,7 @@
 import sharp from "sharp";
 
 export async function GET() {
-  const png = await sharp("public/brand/site-mark.png")
+  const png = await sharp("public/brand/site-mark-round.png")
     .resize(32, 32)
     .png()
     .toBuffer();
