@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: t.metaDescription,
       url: `https://blog.aisolution.uz/${locale}`,
       siteName: "AI Solution Blog",
-      images: ["/images/aisolution-blog-hero.png"],
+      images: ["/og-image.png?v=2"],
       type: "website",
       locale: locale === "ru" ? "ru_RU" : "uz_UZ"
     },
@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: t.metaTitle,
       description: t.metaDescription,
-      images: ["/images/aisolution-blog-hero.png"]
+      images: ["/og-image.png?v=2"]
     },
     robots: {
       index: true,
