@@ -36,17 +36,6 @@ export const clusterCoverImage: Record<TopicCluster, string> = {
   mnenie: "/covers/market-money.png"
 };
 
-const clusterDefaultRating: Record<TopicCluster, number> = {
-  vnedrenie: 8.2,
-  prodazhi: 7.8,
-  integratsii: 8.0,
-  "nlp-uz": 8.4,
-  otrasli: 7.6,
-  ekonomika: 8.1,
-  obuchenie: 7.7,
-  mnenie: 8.6
-};
-
 export const clusterMeta: Record<TopicCluster, { title: Record<Locale, string>; description: Record<Locale, string> }> = {
   vnedrenie: {
     title: { ru: "Оценка стартапов", uz: "Startap bahosi" },
@@ -146,7 +135,6 @@ function loadPost(locale: Locale, fileName: string): Post {
 
   return {
     ...frontmatter,
-    rating: typeof data.rating === "number" ? frontmatter.rating : clusterDefaultRating[frontmatter.topicCluster],
     content: content.trim(),
     readMinutes: estimateReadMinutes(content)
   };
@@ -197,6 +185,33 @@ function getTashkentDateKey(date: Date): string {
 
 export function getStartupStats(locale: Locale, now = new Date()): { today: number; year: number; total: number } {
   const posts = getPublishedPosts(locale).filter((post) => post.category === "startup");
+  const todayKey = getTashkentDateKey(now);
+  const yearKey = todayKey.slice(0, 4);
+
+  return {
+    today: posts.filter((post) => post.publishedAt === todayKey).length,
+    year: posts.filter((post) => post.publishedAt.startsWith(yearKey)).length,
+    total: posts.length
+  };
+}
+
+/**
+ * "up" mirrors the "годно" verdict shown on post cards — our own rating,
+ * not a claim about the company's real-world fundraising or survival.
+ */
+export function getVerdict(rating: number): "up" | "average" | "down" {
+  if (rating >= 7.5) return "up";
+  if (rating >= 5.5) return "average";
+  return "down";
+}
+
+export function getStartupSurvivalStats(
+  locale: Locale,
+  now = new Date()
+): { today: number; year: number; total: number } {
+  const posts = getPublishedPosts(locale).filter(
+    (post) => post.category === "startup" && getVerdict(post.rating) === "up"
+  );
   const todayKey = getTashkentDateKey(now);
   const yearKey = todayKey.slice(0, 4);
 

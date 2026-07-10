@@ -76,7 +76,10 @@ export const frontmatterSchema = z
       .array(z.string().min(1))
       .min(1, "at least 1 keyword required")
       .max(8, "at most 8 keywords allowed"),
-    rating: z.number().min(1).max(10).default(7.4),
+    rating: z
+      .number()
+      .min(1, "must be a real editorial score 1–10, not a placeholder default")
+      .max(10, "must be a real editorial score 1–10, not a placeholder default"),
     serviceLink: publicPathField.optional(),
     translationOf: slugField.optional(),
     cover: publicPathField,

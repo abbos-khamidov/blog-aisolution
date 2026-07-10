@@ -11,6 +11,7 @@ const validFrontmatter = {
   author: "aisolution",
   topicCluster: "vnedrenie",
   keywords: ["внедрение ии", "автоматизация продаж"],
+  rating: 7.4,
   cover: "/covers/vnedrenie-ii-otdel-prodazh.png"
 };
 
