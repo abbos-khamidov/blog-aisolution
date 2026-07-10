@@ -24,6 +24,11 @@ export function Reveal({ children, className, y = 26 }: { children: ReactNode; c
       return undefined;
     }
 
+    if (typeof IntersectionObserver === "undefined") {
+      gsap.set(items, { opacity: 1, y: 0 });
+      return undefined;
+    }
+
     gsap.set(items, { opacity: 0, y });
 
     const revealed = new WeakSet<Element>();

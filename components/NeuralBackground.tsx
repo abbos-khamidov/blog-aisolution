@@ -152,10 +152,13 @@ export function NeuralBackground() {
         raf = window.requestAnimationFrame(draw);
       }
     };
-    const themeObserver = new MutationObserver(() => {
-      updateColors();
-      draw(0);
-    });
+    const themeObserver =
+      typeof MutationObserver === "undefined"
+        ? null
+        : new MutationObserver(() => {
+            updateColors();
+            draw(0);
+          });
 
     window.addEventListener("resize", onResize);
     if ("addEventListener" in reduceMotion) {
@@ -164,7 +167,7 @@ export function NeuralBackground() {
       (reduceMotion as MediaQueryList & { addListener: (listener: () => void) => void }).addListener(onMotionChange);
     }
     document.addEventListener("visibilitychange", onVisibilityChange);
-    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    themeObserver?.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
     if (!reduceMotion.matches && document.visibilityState === "visible") raf = window.requestAnimationFrame(draw);
 
@@ -179,7 +182,7 @@ export function NeuralBackground() {
         );
       }
       document.removeEventListener("visibilitychange", onVisibilityChange);
-      themeObserver.disconnect();
+      themeObserver?.disconnect();
     };
   }, []);
 
