@@ -61,5 +61,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }));
 
-  return [...home, ...posts, ...clusterHubs, ...authorPages, ...ratingPages];
+  const opinionPages: MetadataRoute.Sitemap = locales.map((locale) => ({
+    url: `${BASE}/${locale}/opinion`,
+    lastModified: new Date(),
+    alternates: {
+      languages: Object.fromEntries(locales.map((l) => [l, `${BASE}/${l}/opinion`]))
+    }
+  }));
+
+  return [...home, ...posts, ...clusterHubs, ...authorPages, ...ratingPages, ...opinionPages];
 }

@@ -5,14 +5,15 @@ import { Reveal } from "./Reveal";
 import { SiteHeader } from "./SiteHeader";
 import type { Locale } from "@/lib/i18n";
 import { dictionary } from "@/lib/i18n";
-import { clusterMeta, getClustersInUse, getPublishedPosts } from "@/lib/content";
+import { clusterMeta, getClustersInUse, getOpinionPosts, getPublishedPosts } from "@/lib/content";
 
 const feedFilters = [
   { key: "all", labels: { ru: "Все", uz: "Barchasi" } },
   { key: "aisolution", labels: { ru: "AISOLUTION", uz: "AISOLUTION" } },
   { key: "startup", labels: { ru: "Стартапы", uz: "Startaplar" } },
   { key: "product", labels: { ru: "Продукты", uz: "Mahsulotlar" } },
-  { key: "education", labels: { ru: "AI обучение", uz: "AI ta'lim" } }
+  { key: "education", labels: { ru: "AI обучение", uz: "AI ta'lim" } },
+  { key: "mnenie", labels: { ru: "Мнения", uz: "Fikrlar" } }
 ] as const;
 
 type FeedFilter = (typeof feedFilters)[number]["key"];
@@ -25,6 +26,7 @@ function postMatchesFilter(post: ReturnType<typeof getPublishedPosts>[number], f
   if (filter === "all") return true;
   if (filter === "aisolution") return post.coverLabel === "AISOLUTION";
   if (filter === "startup" || filter === "product") return post.category === filter;
+  if (filter === "mnenie") return post.topicCluster === "mnenie";
   return post.coverLabel === "AI EDUCATION";
 }
 
@@ -32,6 +34,7 @@ export function BlogHome({ locale, activeFilter }: { locale: Locale; activeFilte
   const t = dictionary[locale];
   const filter = getFeedFilter(activeFilter);
   const posts = getPublishedPosts(locale).filter((post) => postMatchesFilter(post, filter));
+  const opinionPosts = getOpinionPosts(locale).slice(0, 2);
   const clusters = getClustersInUse(locale);
   const tickerSignals =
     locale === "ru"
@@ -131,6 +134,24 @@ export function BlogHome({ locale, activeFilter }: { locale: Locale; activeFilte
           <Reveal className="post-grid">
             {posts.map((post, index) => (
               <ContentPostCard key={post.slug} post={post} locale={locale} badge={index === 0 ? "new" : undefined} />
+            ))}
+          </Reveal>
+        </section>
+
+        <section className="feed-section" id="opinion">
+          <div className="section-head split">
+            <div>
+              <p className="kicker">{t.opinionKicker}</p>
+              <h2>{t.opinionTitle}</h2>
+              <p className="section-copy">{t.opinionCopy}</p>
+            </div>
+            <Link className="button ghost" href={`/${locale}/opinion`}>
+              {t.opinionCta}
+            </Link>
+          </div>
+          <Reveal className="post-grid">
+            {opinionPosts.map((post) => (
+              <ContentPostCard key={post.slug} post={post} locale={locale} />
             ))}
           </Reveal>
         </section>

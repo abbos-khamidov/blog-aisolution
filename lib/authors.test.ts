@@ -2,10 +2,10 @@ import { describe, expect, it } from "vitest";
 import { authors, isKnownAuthor, listAuthors, resolveAuthor, UnknownAuthorError } from "./authors";
 
 describe("authors registry", () => {
-  it("has aisolution as the founder", () => {
-    const author = resolveAuthor("aisolution");
+  it("has abbas-khamidov as the founder", () => {
+    const author = resolveAuthor("abbas-khamidov");
     expect(author.isFounder).toBe(true);
-    expect(author.name.ru).toBe("AISOLUTION");
+    expect(author.name.ru).toContain("Abbas");
   });
 
   it("throws UnknownAuthorError with a readable message for an unregistered key", () => {
@@ -19,6 +19,7 @@ describe("authors registry", () => {
   });
 
   it("isKnownAuthor reflects registry membership", () => {
+    expect(isKnownAuthor("abbas-khamidov")).toBe(true);
     expect(isKnownAuthor("aisolution")).toBe(true);
     expect(isKnownAuthor("nobody")).toBe(false);
   });

@@ -19,23 +19,42 @@ export interface Author {
  * not stored twice — see lib/jsonld.ts (задача 5).
  */
 export const authors: Record<string, Author> = {
+  "abbas-khamidov": {
+    key: "abbas-khamidov",
+    name: {
+      ru: "Abbas Khamidov",
+      uz: "Abbas Khamidov"
+    },
+    alternateName: "Abbos Khamidov",
+    role: {
+      ru: "Founder AI Solution",
+      uz: "AI Solution asoschisi"
+    },
+    bio: {
+      ru: "Собирает продуктовые и рыночные сигналы в жесткие выводы: где есть спрос, где только презентация и что реально можно строить.",
+      uz: "Mahsulot va bozor signallarini qat'iy xulosalarga aylantiradi: qayerda talab bor, qayerda faqat taqdimot va nimani real qurish mumkin."
+    },
+    image: "/authors/abbas-khamidov.svg",
+    sameAs: [],
+    isFounder: true
+  },
   aisolution: {
     key: "aisolution",
     name: {
-      ru: "AISOLUTION",
-      uz: "AISOLUTION"
+      ru: "AISOLUTION Editorial",
+      uz: "AISOLUTION editorial"
     },
     role: {
-      ru: "Редакция AISOLUTION",
-      uz: "AISOLUTION tahririyati"
+      ru: "Редакционный desk",
+      uz: "Tahririyat desk"
     },
     bio: {
-      ru: "AISOLUTION разбирает AI-продукты, стартапы и технологические рынки Центральной Азии без пресс-релизной ваты.",
-      uz: "AISOLUTION Markaziy Osiyodagi AI mahsulotlar, startaplar va texnologik bozorlarni press-reliz paxtasisiz tahlil qiladi."
+      ru: "Редакция AISOLUTION отделяет мнение от счета: что мы видим в продукте, куда смотрит рынок и почему вывод не должен быть случайным.",
+      uz: "AISOLUTION tahririyati fikrni hisobdan ajratadi: mahsulotda nimani ko'ramiz, bozor qayerga qarayapti va xulosa nega tasodifiy bo'lmasligi kerak."
     },
-    image: "/brand/logo-dark-transparent.png",
+    image: "/authors/aisolution-editorial.svg",
     sameAs: [],
-    isFounder: true
+    isFounder: false
   }
 };
 

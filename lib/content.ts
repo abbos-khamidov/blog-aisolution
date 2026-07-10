@@ -97,10 +97,10 @@ export const clusterMeta: Record<TopicCluster, { title: Record<Locale, string>; 
     }
   },
   mnenie: {
-    title: { ru: "Вердикты", uz: "Verdictlar" },
+    title: { ru: "Мнения", uz: "Fikrlar" },
     description: {
-      ru: "Коротко: берем, смотрим, режем лишнее и говорим, есть ли там мясо.",
-      uz: "Qisqa: olamiz, ko'ramiz, ortiqchasini kesamiz va ichida go'sht bormi aytamiz."
+      ru: "Колонки и позиции редакции: где проходит граница между фактом, оценкой и красивой упаковкой.",
+      uz: "Tahririyat ustunlari va pozitsiyalari: fakt, baho va chiroyli qadoq orasidagi chegara qayerda."
     }
   }
 };
@@ -170,7 +170,15 @@ export function getPublishedPosts(locale?: Locale): Post[] {
 }
 
 export function getRatedPosts(locale: Locale): Post[] {
-  return getPublishedPosts(locale).sort((a, b) => b.rating - a.rating || (a.publishedAt < b.publishedAt ? 1 : -1));
+  return getPublishedPosts(locale)
+    .filter((post) => post.topicCluster !== "mnenie")
+    .sort((a, b) => b.rating - a.rating || (a.publishedAt < b.publishedAt ? 1 : -1));
+}
+
+export function getOpinionPosts(locale: Locale): Post[] {
+  return getPublishedPosts(locale)
+    .filter((post) => post.topicCluster === "mnenie")
+    .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1));
 }
 
 export function getPostBySlug(locale: Locale, slug: string): Post | undefined {

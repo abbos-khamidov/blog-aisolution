@@ -21,6 +21,7 @@ export function ContentPostCard({ post, locale, badge }: Props) {
   const t = dictionary[locale];
   const author = resolveAuthor(post.author);
   const isAisolutionCard = post.coverLabel === "AISOLUTION";
+  const isOpinion = post.topicCluster === "mnenie";
 
   return (
     <Link className={`post-card${isAisolutionCard ? " post-card-active" : ""}`} href={`/${locale}/blog/${post.slug}`}>
@@ -58,9 +59,15 @@ export function ContentPostCard({ post, locale, badge }: Props) {
         </div>
         <div className="card-bottom">
           <span>{author.name[locale]}</span>
-          <span className="rating-chip" aria-label={`${t.ratingLabel}: ${post.rating} / 10`}>
-            {t.ratingShort} {post.rating.toFixed(1)}
-          </span>
+          {isOpinion ? (
+            <span className="opinion-chip" aria-label={t.opinionChip}>
+              {t.opinionChip}
+            </span>
+          ) : (
+            <span className="rating-chip" aria-label={`${t.ratingLabel}: ${post.rating} / 10`}>
+              {t.ratingShort} {post.rating.toFixed(1)}
+            </span>
+          )}
           <span className="read-more">{t.read} -&gt;</span>
         </div>
       </div>

@@ -718,6 +718,118 @@ p {
   line-height: 1.55;
 }
 
+.rating-method,
+.opinion-section {
+  margin-top: 28px;
+}
+
+.rating-method-grid,
+.opinion-people-grid,
+.opinion-direction-grid {
+  display: grid;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.rating-method-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.rating-method-grid p,
+.opinion-direction-card,
+.opinion-voice-card {
+  border: 3px solid var(--line);
+  background: var(--surface);
+  box-shadow: 5px 5px 0 0 var(--line);
+}
+
+.rating-method-grid p {
+  padding: 18px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.opinion-people-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.opinion-voice-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.opinion-voice-card:hover,
+.opinion-direction-card:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 9px 9px 0 0 var(--shadow-hover);
+}
+
+.opinion-voice-avatar {
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+  border: 3px solid var(--line);
+  border-radius: 16px;
+  background: var(--brand-lime);
+}
+
+.opinion-voice-card strong {
+  display: block;
+  font-size: 22px;
+  line-height: 1.05;
+}
+
+.opinion-voice-card p {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.opinion-voice-card small {
+  display: block;
+  margin-top: 8px;
+  color: var(--brand-blue);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.opinion-direction-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.opinion-direction-card {
+  display: block;
+  padding: 18px;
+  min-height: 180px;
+  color: inherit;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.opinion-direction-card span {
+  display: inline-block;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  background: var(--brand-orange);
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.opinion-direction-card p {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
 /* ---------- cards, shared brutalist shell ---------- */
 
 .radar-grid {
@@ -1090,6 +1202,18 @@ p {
   border: 2px solid #07070c;
   border-radius: 999px;
   background: var(--brand-orange);
+  color: #07070c;
+  padding: 5px 9px;
+  font-size: 12px;
+  font-weight: 950;
+  box-shadow: 3px 3px 0 0 #07070c;
+}
+
+.opinion-chip {
+  min-width: max-content;
+  border: 2px solid #07070c;
+  border-radius: 999px;
+  background: var(--brand-lime);
   color: #07070c;
   padding: 5px 9px;
   font-size: 12px;
@@ -1828,6 +1952,9 @@ p {
 
   .radar-grid,
   .post-grid,
+  .rating-method-grid,
+  .opinion-people-grid,
+  .opinion-direction-grid,
   .position-inner,
   .source-strip,
   .editor-form,

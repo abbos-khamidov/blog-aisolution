@@ -63,6 +63,22 @@ export default async function RatingPage({ params }: Props) {
           <p className="section-copy">{t.ratingCopy}</p>
         </div>
 
+        <section className="rating-method">
+          <div className="section-head split">
+            <div>
+              <p className="kicker">{t.ratingMethodKicker}</p>
+              <h2>{t.ratingMethodTitle}</h2>
+              <p className="section-copy">{t.ratingMethodCopy}</p>
+            </div>
+          </div>
+          <div className="rating-method-grid">
+            <p>{t.ratingMethodPoint1}</p>
+            <p>{t.ratingMethodPoint2}</p>
+            <p>{t.ratingMethodPoint3}</p>
+            <p>{t.ratingMethodPoint4}</p>
+          </div>
+        </section>
+
         <div className="post-grid">
           {posts.map((post) => (
             <ContentPostCard key={post.slug} post={post} locale={locale} />

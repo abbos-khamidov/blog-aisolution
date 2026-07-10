@@ -8,7 +8,7 @@ export function middleware(request: NextRequest) {
 
   const url = request.nextUrl.clone();
   url.pathname = "/ru";
-  return NextResponse.redirect(url, 308);
+  return NextResponse.rewrite(url);
 }
 
 export const config = {
