@@ -11,6 +11,26 @@ export function HeroIllustration({ locale }: { locale: Locale }) {
 
   return (
     <div className="hero-illustration" aria-hidden="true">
+      <svg className="hero-illustration-leftwave" viewBox="0 0 120 520" fill="none">
+        <path
+          d="M18 20 C42 80 0 124 28 180 C56 236 18 286 40 344 C62 402 34 452 58 500"
+          stroke="#d8ff2c"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeDasharray="12 12"
+        />
+        <circle cx="18" cy="20" r="6" fill="#fff" />
+        <circle cx="28" cy="180" r="6" fill="#ff5b1f" />
+        <circle cx="40" cy="344" r="6" fill="#5b7cff" />
+        <circle cx="58" cy="500" r="6" fill="#d8ff2c" />
+      </svg>
+
+      <div className="hero-illustration-note">
+        <span>{t.heroVisualKicker}</span>
+        <strong>{t.heroVisualTitle}</strong>
+        <p>{t.heroVisualCopy}</p>
+      </div>
+
       <svg className="hero-illustration-hex" viewBox="0 0 200 200" fill="none">
         <defs>
           <linearGradient id="hexStroke" x1="0" y1="0" x2="1" y2="1">
@@ -54,7 +74,6 @@ export function HeroIllustration({ locale }: { locale: Locale }) {
         <strong>+38%</strong>
         <small>{t.heroCardRoutine}</small>
       </div>
-
     </div>
   );
 }
