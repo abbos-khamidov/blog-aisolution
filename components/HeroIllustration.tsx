@@ -35,6 +35,7 @@ export function HeroIllustration({ locale }: { locale: Locale }) {
       <div className="hero-illustration-note">
         <span>{t.heroVisualKicker}</span>
         <strong>{t.heroVisualTitle}</strong>
+        <em>{locale === "ru" ? "Редакционная позиция" : "Tahririyat pozitsiyasi"}</em>
         <p>{t.heroVisualCopy}</p>
       </div>
 
