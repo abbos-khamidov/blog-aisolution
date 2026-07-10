@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Eraser } from "lucide-react";
 import { dictionary, type Locale } from "@/lib/i18n";
 
 type Props = {
@@ -44,7 +43,16 @@ export function SelectionClearButton({ locale }: Props) {
       aria-hidden={!visible}
       tabIndex={visible ? 0 : -1}
     >
-      <Eraser aria-hidden="true" />
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M5 15.5 12.4 8l6.6 6.5-4.4 4.5H9.1L5 15.5Z"
+          fill="currentColor"
+          stroke="currentColor"
+          strokeWidth="1.75"
+          strokeLinejoin="round"
+        />
+        <path d="M11.8 8.2 15.4 4.5 20 9.1l-3.6 3.6" stroke="currentColor" strokeWidth="1.75" strokeLinejoin="round" />
+      </svg>
       <span>{t.selectionClearLabel}</span>
     </button>
   );
