@@ -6,6 +6,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import "../globals.css";
 import { NeuralBackground } from "@/components/NeuralBackground";
+import { SelectionClearButton } from "@/components/SelectionClearButton";
 import { dictionary, getLocale, locales, type Locale } from "@/lib/i18n";
 
 // Cyrillic subset is required for ru content — globals.css already declared
@@ -99,6 +100,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             aisolution.uz <span aria-hidden="true">→</span>
           </Link>
         </footer>
+        <SelectionClearButton locale={locale} />
       </body>
     </html>
   );

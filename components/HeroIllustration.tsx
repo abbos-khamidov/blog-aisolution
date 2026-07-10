@@ -1,6 +1,16 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { dictionary, type Locale } from "@/lib/i18n";
 
 type Stats = { today: number; year: number; total: number };
+
+const barPatterns = [
+  [30, 55, 75, 100],
+  [50, 85, 40, 65],
+  [65, 35, 95, 55],
+  [40, 70, 50, 90]
+];
 
 /**
  * Custom vector illustration for the hero — replaces a generic AI-stock
@@ -8,9 +18,41 @@ type Stats = { today: number; year: number; total: number };
  * outline + circuit nodes), plus the one number a visitor actually needs on
  * first paint: how many startups have been reviewed, and how many today.
  */
-export function HeroIllustration({ locale, stats }: { locale: Locale; stats: Stats }) {
+export function HeroIllustration({
+  locale,
+  stats,
+  survival
+}: {
+  locale: Locale;
+  stats: Stats;
+  survival: Stats;
+}) {
   const t = dictionary[locale];
   const numberFormat = new Intl.NumberFormat(locale === "uz" ? "uz-UZ" : "ru-RU");
+  const statFrames = [
+    { value: "+38%", label: t.heroCardRoutine },
+    { value: "24/7", label: t.heroCardControl }
+  ];
+
+  const [barFrame, setBarFrame] = useState(0);
+  const [statFrame, setStatFrame] = useState(0);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return undefined;
+
+    const barTimer = window.setInterval(() => setBarFrame((i) => (i + 1) % barPatterns.length), 2400);
+    const statTimer = window.setInterval(() => setStatFrame((i) => (i + 1) % statFrames.length), 3200);
+
+    return () => {
+      window.clearInterval(barTimer);
+      window.clearInterval(statTimer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const bars = barPatterns[barFrame];
+  const statNow = statFrames[statFrame];
 
   return (
     <div className="hero-illustration" aria-hidden="true">
@@ -64,21 +106,29 @@ export function HeroIllustration({ locale, stats }: { locale: Locale; stats: Sta
             <small>{t.statsTodayLabel}</small>
           </div>
         </div>
+        <div className="hero-illustration-stat-survived">
+          <b>
+            {numberFormat.format(survival.total)}/{numberFormat.format(stats.total)}
+          </b>
+          <span>{t.heroVisualSurvivedLabel}</span>
+        </div>
       </div>
 
       <div className="hero-illustration-card card-a">
         <div className="bars">
-          <span className="bar" style={{ height: "30%", background: "#0d2bff" }} />
-          <span className="bar" style={{ height: "55%", background: "#ff5b1f" }} />
-          <span className="bar" style={{ height: "75%", background: "#0d2bff" }} />
-          <span className="bar" style={{ height: "100%", background: "#d8ff2c" }} />
+          <span className="bar" style={{ height: `${bars[0]}%`, background: "#0d2bff" }} />
+          <span className="bar" style={{ height: `${bars[1]}%`, background: "#ff5b1f" }} />
+          <span className="bar" style={{ height: `${bars[2]}%`, background: "#0d2bff" }} />
+          <span className="bar" style={{ height: `${bars[3]}%`, background: "#d8ff2c" }} />
         </div>
         <small>{t.heroCardGrowth}</small>
       </div>
 
       <div className="hero-illustration-card card-c">
-        <strong>+38%</strong>
-        <small>{t.heroCardRoutine}</small>
+        <div key={statFrame} className="card-c-frame">
+          <strong>{statNow.value}</strong>
+          <small>{statNow.label}</small>
+        </div>
       </div>
     </div>
   );

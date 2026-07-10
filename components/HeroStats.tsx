@@ -48,20 +48,26 @@ function useCountUp(target: number, active = true) {
 function StatTile({
   label,
   value,
-  locale,
-  accent
+  survived,
+  survivedLabel,
+  locale
 }: {
   label: string;
   value: number;
+  survived: number;
+  survivedLabel: string;
   locale: Locale;
-  accent?: boolean;
 }) {
   const animated = useCountUp(value, true);
+  const animatedSurvived = useCountUp(survived, true);
   const numberFormat = new Intl.NumberFormat(locale === "uz" ? "uz-UZ" : "ru-RU");
   return (
-    <div className={`hero-stat${accent ? " hero-stat-accent" : ""}`}>
+    <div className="hero-stat">
       <strong>{numberFormat.format(animated)}</strong>
       <span>{label}</span>
+      <em className="hero-stat-survived-badge">
+        {numberFormat.format(animatedSurvived)} {survivedLabel}
+      </em>
     </div>
   );
 }
@@ -70,25 +76,20 @@ export function HeroStats({ locale, stats, survival }: Props) {
   const t = dictionary[locale];
   const tiles = useMemo(
     () => [
-      { label: t.statsTodayLabel, value: stats.today },
-      { label: t.statsYearLabel, value: stats.year },
-      { label: t.statsTotalLabel, value: stats.total }
-    ],
-    [stats.today, stats.year, stats.total, t.statsTodayLabel, t.statsTotalLabel, t.statsYearLabel]
-  );
-  const survivalTiles = useMemo(
-    () => [
-      { label: t.statsSurvivedTodayLabel, value: survival.today },
-      { label: t.statsSurvivedYearLabel, value: survival.year },
-      { label: t.statsSurvivedTotalLabel, value: survival.total }
+      { label: t.statsTodayLabel, value: stats.today, survived: survival.today },
+      { label: t.statsYearLabel, value: stats.year, survived: survival.year },
+      { label: t.statsTotalLabel, value: stats.total, survived: survival.total }
     ],
     [
+      stats.today,
+      stats.year,
+      stats.total,
       survival.today,
       survival.year,
       survival.total,
-      t.statsSurvivedTodayLabel,
-      t.statsSurvivedYearLabel,
-      t.statsSurvivedTotalLabel
+      t.statsTodayLabel,
+      t.statsTotalLabel,
+      t.statsYearLabel
     ]
   );
 
@@ -101,14 +102,19 @@ export function HeroStats({ locale, stats, survival }: Props) {
         </div>
         <div className="hero-stats-grid" role="list">
           {tiles.map((tile) => (
-            <StatTile key={tile.label} label={tile.label} value={tile.value} locale={locale} />
-          ))}
-          {survivalTiles.map((tile) => (
-            <StatTile key={tile.label} label={tile.label} value={tile.value} locale={locale} accent />
+            <StatTile
+              key={tile.label}
+              label={tile.label}
+              value={tile.value}
+              survived={tile.survived}
+              survivedLabel={t.statsSurvivedBadge}
+              locale={locale}
+            />
           ))}
         </div>
       </div>
       <div className="hero-stats-ecosystem">
+        <span className="hero-stats-ecosystem-prefix">{t.statsEcosystemPrefix}</span>
         <strong>{t.statsEcosystemValue}</strong>
         <span>{t.statsEcosystemLabel}</span>
         <em>{t.statsEcosystemGrowth}</em>

@@ -76,6 +76,40 @@ a {
   color: #07070c;
 }
 
+.selection-clear-button {
+  position: fixed;
+  right: 50%;
+  bottom: 18px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: var(--brand-orange);
+  color: #07070c;
+  font-size: 13px;
+  font-weight: 950;
+  box-shadow: 4px 4px 0 0 #07070c;
+  opacity: 0;
+  transform: translate(50%, 12px);
+  pointer-events: none;
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+
+.selection-clear-button.is-visible {
+  opacity: 1;
+  transform: translate(50%, 0);
+  pointer-events: auto;
+}
+
+.selection-clear-button svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
 @media (hover: hover) and (pointer: fine) {
   body {
     cursor: url("/cursor-pencil.svg") 5 23, auto;
@@ -94,6 +128,10 @@ a {
   textarea,
   [contenteditable="true"] {
     cursor: text;
+  }
+
+  .selection-clear-button {
+    cursor: url("/cursor-pencil.svg") 5 23, pointer;
   }
 }
 
@@ -759,13 +797,21 @@ p {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
-  gap: 12px 14px;
+  gap: 10px 14px;
   border-top: 2px dashed var(--line);
   padding-top: 16px;
 }
 
+.hero-stats-ecosystem-prefix {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
 .hero-stats-ecosystem strong {
-  font-size: clamp(26px, 3.2vw, 38px);
+  font-size: clamp(18px, 2vw, 24px);
   font-weight: 950;
   line-height: 1;
   color: var(--brand-blue);
@@ -834,13 +880,18 @@ p {
   text-transform: uppercase;
 }
 
-.hero-stat-accent {
-  border-color: var(--brand-blue);
-  background: color-mix(in srgb, var(--brand-blue) 6%, var(--surface));
-}
-
-.hero-stat-accent strong {
+.hero-stat-survived-badge {
+  display: inline-block;
+  margin-top: 8px;
+  border: 1.5px solid var(--brand-blue);
   color: var(--brand-blue);
+  font-style: normal;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 999px;
 }
 
 /* ---------- ticker ---------- */
