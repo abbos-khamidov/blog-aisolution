@@ -1,7 +1,8 @@
+import path from "node:path";
 import { readFile } from "node:fs/promises";
 
 export async function GET() {
-  const png = await readFile("public/brand/site-mark-round.png");
+  const png = await readFile(path.join(process.cwd(), "public/brand/site-mark-round.png"));
   const svg = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <rect width="64" height="64" rx="18" ry="18" fill="#1c46d6" />
