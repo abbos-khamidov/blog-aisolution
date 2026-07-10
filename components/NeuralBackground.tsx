@@ -158,7 +158,11 @@ export function NeuralBackground() {
     });
 
     window.addEventListener("resize", onResize);
-    reduceMotion.addEventListener("change", onMotionChange);
+    if ("addEventListener" in reduceMotion) {
+      reduceMotion.addEventListener("change", onMotionChange);
+    } else {
+      (reduceMotion as MediaQueryList & { addListener: (listener: () => void) => void }).addListener(onMotionChange);
+    }
     document.addEventListener("visibilitychange", onVisibilityChange);
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
@@ -167,7 +171,13 @@ export function NeuralBackground() {
     return () => {
       window.cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
-      reduceMotion.removeEventListener("change", onMotionChange);
+      if ("removeEventListener" in reduceMotion) {
+        reduceMotion.removeEventListener("change", onMotionChange);
+      } else {
+        (reduceMotion as MediaQueryList & { removeListener: (listener: () => void) => void }).removeListener(
+          onMotionChange
+        );
+      }
       document.removeEventListener("visibilitychange", onVisibilityChange);
       themeObserver.disconnect();
     };

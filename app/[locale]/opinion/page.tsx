@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ContentPostCard } from "@/components/ContentPostCard";
@@ -96,7 +95,7 @@ export default async function OpinionPage({ params }: Props) {
                 locale === "ru" ? `${authorPosts.length} ${authorPosts.length === 1 ? "мнение" : "мнений"}` : `${authorPosts.length} fikr`;
               return (
                 <Link key={author.key} className="opinion-voice-card" href={`/${locale}/authors/${author.key}`}>
-                  <Image className="opinion-voice-avatar" src={author.image} alt={author.name[locale]} width={72} height={72} />
+                  <img className="opinion-voice-avatar" src={author.image} alt={author.name[locale]} width={72} height={72} />
                   <div>
                     <strong>{author.name[locale]}</strong>
                     <p>{author.role[locale]}</p>

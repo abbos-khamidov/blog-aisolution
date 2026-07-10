@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Inter } from "next/font/google";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import "../globals.css";
@@ -90,7 +89,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         <footer className="site-footer">
           <div className="footer-brand">
             <span className="footer-mark">
-              <Image src="/brand/site-mark.png" alt="" width={22} height={22} />
+              <img src="/brand/site-mark.png" alt="" width={22} height={22} />
             </span>
             <div>
               <strong>AI Solution Blog</strong>

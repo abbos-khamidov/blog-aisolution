@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ContentPostCard } from "@/components/ContentPostCard";
@@ -63,7 +62,7 @@ export default async function AuthorPage({ params }: Props) {
         </nav>
 
         <div className="section-head">
-          <Image className="author-photo" src={author.image} alt={author.name[locale]} width={84} height={84} />
+          <img className="author-photo" src={author.image} alt={author.name[locale]} width={84} height={84} />
           <h1>{author.name[locale]}</h1>
           <p className="section-copy">{author.role[locale]}</p>
           <p className="section-copy">{author.bio[locale]}</p>

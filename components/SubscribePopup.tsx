@@ -7,6 +7,14 @@ import { usePushSubscription } from "./usePushSubscription";
 const DISMISS_KEY = "aisolution-subscribe-popup-dismissed";
 const DELAY_MS = 15000;
 
+function safeStorage() {
+  try {
+    return window.localStorage;
+  } catch {
+    return null;
+  }
+}
+
 export function SubscribePopup({ locale }: { locale: Locale }) {
   const t = dictionary[locale];
   const { supported, subscribed, busy, subscribe } = usePushSubscription(locale);
@@ -14,7 +22,7 @@ export function SubscribePopup({ locale }: { locale: Locale }) {
 
   useEffect(() => {
     if (!supported || subscribed) return undefined;
-    if (localStorage.getItem(DISMISS_KEY)) return undefined;
+    if (safeStorage()?.getItem(DISMISS_KEY)) return undefined;
 
     const timer = window.setTimeout(() => setVisible(true), DELAY_MS);
     return () => window.clearTimeout(timer);
@@ -25,14 +33,14 @@ export function SubscribePopup({ locale }: { locale: Locale }) {
   }, [subscribed]);
 
   function dismiss() {
-    localStorage.setItem(DISMISS_KEY, "1");
+    safeStorage()?.setItem(DISMISS_KEY, "1");
     setVisible(false);
   }
 
   async function handleSubscribe() {
     const granted = await subscribe();
     if (granted) {
-      localStorage.setItem(DISMISS_KEY, "1");
+      safeStorage()?.setItem(DISMISS_KEY, "1");
       setVisible(false);
     }
   }
