@@ -45,11 +45,11 @@ export function NeuralBackground() {
     };
 
     const seedNodes = () => {
-      const target = Math.round(Math.min(68, Math.max(30, (width * height) / 31000)));
+      const target = Math.round(Math.min(38, Math.max(18, (width * height) / 46000)));
       nodes.length = 0;
 
       for (let i = 0; i < target; i += 1) {
-        const speed = 0.12 + Math.random() * 0.22;
+        const speed = 0.08 + Math.random() * 0.16;
         const angle = Math.random() * Math.PI * 2;
         nodes.push({
           x: Math.random() * width,
@@ -77,7 +77,7 @@ export function NeuralBackground() {
     const draw = (time: number) => {
       ctx.clearRect(0, 0, width, height);
 
-      const maxDistance = Math.min(190, Math.max(120, width * 0.12));
+      const maxDistance = Math.min(168, Math.max(110, width * 0.1));
       const lineWidth = width < 640 ? 0.7 : 0.95;
 
       ctx.save();
@@ -132,7 +132,7 @@ export function NeuralBackground() {
 
       ctx.restore();
 
-      if (!reduceMotion.matches) {
+      if (!reduceMotion.matches && document.visibilityState === "visible") {
         raf = window.requestAnimationFrame(draw);
       }
     };
@@ -144,7 +144,13 @@ export function NeuralBackground() {
     const onMotionChange = () => {
       window.cancelAnimationFrame(raf);
       draw(0);
-      if (!reduceMotion.matches) raf = window.requestAnimationFrame(draw);
+      if (!reduceMotion.matches && document.visibilityState === "visible") raf = window.requestAnimationFrame(draw);
+    };
+    const onVisibilityChange = () => {
+      window.cancelAnimationFrame(raf);
+      if (!reduceMotion.matches && document.visibilityState === "visible") {
+        raf = window.requestAnimationFrame(draw);
+      }
     };
     const themeObserver = new MutationObserver(() => {
       updateColors();
@@ -153,14 +159,16 @@ export function NeuralBackground() {
 
     window.addEventListener("resize", onResize);
     reduceMotion.addEventListener("change", onMotionChange);
+    document.addEventListener("visibilitychange", onVisibilityChange);
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
-    if (!reduceMotion.matches) raf = window.requestAnimationFrame(draw);
+    if (!reduceMotion.matches && document.visibilityState === "visible") raf = window.requestAnimationFrame(draw);
 
     return () => {
       window.cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
       reduceMotion.removeEventListener("change", onMotionChange);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       themeObserver.disconnect();
     };
   }, []);

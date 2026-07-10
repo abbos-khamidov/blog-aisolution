@@ -7,6 +7,7 @@ import { parseFrontmatter, topicClusters, type Frontmatter, type TopicCluster } 
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
 const WORDS_PER_MINUTE = 200;
+const TASHKENT_TIME_ZONE = "Asia/Tashkent";
 
 export type Post = Frontmatter & {
   content: string;
@@ -179,6 +180,31 @@ export function getOpinionPosts(locale: Locale): Post[] {
   return getPublishedPosts(locale)
     .filter((post) => post.topicCluster === "mnenie")
     .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1));
+}
+
+function getTashkentDateKey(date: Date): string {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: TASHKENT_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).formatToParts(date);
+  const year = parts.find((part) => part.type === "year")?.value ?? "0000";
+  const month = parts.find((part) => part.type === "month")?.value ?? "00";
+  const day = parts.find((part) => part.type === "day")?.value ?? "00";
+  return `${year}-${month}-${day}`;
+}
+
+export function getStartupStats(locale: Locale, now = new Date()): { today: number; year: number; total: number } {
+  const posts = getPublishedPosts(locale).filter((post) => post.category === "startup");
+  const todayKey = getTashkentDateKey(now);
+  const yearKey = todayKey.slice(0, 4);
+
+  return {
+    today: posts.filter((post) => post.publishedAt === todayKey).length,
+    year: posts.filter((post) => post.publishedAt.startsWith(yearKey)).length,
+    total: posts.length
+  };
 }
 
 export function getPostBySlug(locale: Locale, slug: string): Post | undefined {

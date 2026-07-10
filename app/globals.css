@@ -185,6 +185,12 @@ p {
   font-size: 13px;
   font-weight: 900;
   text-transform: uppercase;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.top-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .top-nav a {
@@ -575,6 +581,51 @@ p {
 
 .hero .button.ghost:hover {
   box-shadow: 8px 8px 0 0 rgba(255, 255, 255, 0.5);
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: end;
+  padding: 18px clamp(18px, 4vw, 54px) 0;
+  margin-top: -8px;
+  background: var(--paper);
+}
+
+.hero-stats-head h2 {
+  margin-top: 8px;
+  font-size: clamp(24px, 2.8vw, 38px);
+  line-height: 1;
+}
+
+.hero-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.hero-stat {
+  border: 3px solid var(--line);
+  background: var(--surface);
+  box-shadow: 5px 5px 0 0 var(--line);
+  padding: 14px 16px;
+}
+
+.hero-stat strong {
+  display: block;
+  font-size: clamp(28px, 4vw, 46px);
+  line-height: 0.96;
+}
+
+.hero-stat span {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 /* ---------- ticker ---------- */
@@ -1190,11 +1241,17 @@ p {
   align-items: flex-end;
   justify-content: flex-start;
   gap: 10px;
+  flex-wrap: wrap;
   border-top: 2px solid var(--line);
   padding-top: 14px;
   color: var(--muted);
   font-size: 13px;
   font-weight: 850;
+}
+
+.card-bottom > span:first-child {
+  min-width: 0;
+  flex: 1 1 170px;
 }
 
 .rating-chip {
@@ -1207,6 +1264,40 @@ p {
   font-size: 12px;
   font-weight: 950;
   box-shadow: 3px 3px 0 0 #07070c;
+}
+
+.rating-verdict {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: max-content;
+  border: 2px solid #07070c;
+  border-radius: 999px;
+  padding: 5px 9px;
+  font-size: 12px;
+  font-weight: 950;
+  box-shadow: 3px 3px 0 0 #07070c;
+}
+
+.rating-verdict svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.4;
+}
+
+.rating-verdict-up {
+  background: var(--brand-lime);
+  color: #07070c;
+}
+
+.rating-verdict-average {
+  background: var(--brand-cream);
+  color: #07070c;
+}
+
+.rating-verdict-down {
+  background: #ffd1c3;
+  color: #07070c;
 }
 
 .opinion-chip {
@@ -1930,6 +2021,14 @@ p {
     min-height: auto;
   }
 
+  .hero-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
   .hero-visual {
     order: -1;
     min-height: 330px;
@@ -1953,6 +2052,7 @@ p {
   .radar-grid,
   .post-grid,
   .rating-method-grid,
+  .hero-stats-grid,
   .opinion-people-grid,
   .opinion-direction-grid,
   .position-inner,
