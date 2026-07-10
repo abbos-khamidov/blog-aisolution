@@ -41,9 +41,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: t.metaDescription,
     keywords: ["aisolution", "ai solution", "startup evaluation", "оценка стартапов", "ai startups"],
     icons: {
-      icon: "/favicon.svg?v=4",
-      shortcut: "/favicon.svg?v=4",
-      apple: "/favicon.svg?v=4"
+      icon: "/brand/site-mark.png?v=5",
+      shortcut: "/brand/site-mark.png?v=5",
+      apple: "/brand/site-mark.png?v=5"
     },
     openGraph: {
       title: t.metaTitle,
@@ -88,7 +88,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         <footer className="site-footer">
           <div className="footer-brand">
             <span className="footer-mark">
-              <Image src="/brand/logo-dark-transparent.png" alt="" width={22} height={22} />
+              <Image src="/brand/site-mark.png" alt="" width={22} height={22} />
             </span>
             <div>
               <strong>AI Solution Blog</strong>

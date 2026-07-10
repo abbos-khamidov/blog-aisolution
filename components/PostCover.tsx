@@ -14,7 +14,7 @@ type Props = {
 
 export function PostCover({ cluster, locale, cover, label, logo, size = "card" }: Props) {
   const coverImage = cover?.startsWith("/covers/") ? cover : clusterCoverImage[cluster];
-  const logoImage = logo ?? "/brand/logo-dark-transparent.png";
+  const logoImage = logo ?? "/brand/site-mark.png";
 
   return (
     <div
