@@ -6,9 +6,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const url = request.nextUrl.clone();
-  url.pathname = "/ru";
-  return NextResponse.redirect(url, 308);
+  return NextResponse.redirect(new URL("/ru", "https://blog.aisolution.uz"), 308);
 }
 
 export const config = {
