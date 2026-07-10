@@ -1,43 +1,31 @@
 import { dictionary, type Locale } from "@/lib/i18n";
 
+type Stats = { today: number; year: number; total: number };
+
 /**
  * Custom vector illustration for the hero — replaces a generic AI-stock
  * photo with a composition built from the actual logo's language (hexagon
- * outline + circuit nodes), so the hero reads as designed rather than
- * dropped-in stock art.
+ * outline + circuit nodes), plus the one number a visitor actually needs on
+ * first paint: how many startups have been reviewed, and how many today.
  */
-export function HeroIllustration({ locale }: { locale: Locale }) {
+export function HeroIllustration({ locale, stats }: { locale: Locale; stats: Stats }) {
   const t = dictionary[locale];
+  const numberFormat = new Intl.NumberFormat(locale === "uz" ? "uz-UZ" : "ru-RU");
 
   return (
     <div className="hero-illustration" aria-hidden="true">
-      <svg className="hero-illustration-leftwave" viewBox="0 0 120 520" fill="none">
+      <svg className="hero-illustration-leftwave" viewBox="0 0 60 520" fill="none">
         <path
-          d="M20 18 C42 70 8 122 30 176 C52 230 16 284 38 338 C60 392 30 448 54 502"
+          d="M20 18 C32 70 12 122 24 176 C36 230 14 284 26 338 C38 392 18 448 30 502"
           stroke="#d8ff2c"
-          strokeWidth="5"
-          strokeLinecap="round"
-          strokeDasharray="12 12"
-        />
-        <path
-          d="M14 72 L54 72 L54 126 L88 126"
-          stroke="#ff5b1f"
           strokeWidth="4"
           strokeLinecap="round"
-          strokeLinejoin="round"
+          strokeDasharray="10 12"
         />
-        <circle cx="20" cy="18" r="7" fill="#fff" />
-        <circle cx="30" cy="176" r="7" fill="#ff5b1f" />
-        <circle cx="38" cy="338" r="7" fill="#5b7cff" />
-        <circle cx="54" cy="502" r="7" fill="#d8ff2c" />
+        <circle cx="20" cy="18" r="6" fill="#fff" />
+        <circle cx="26" cy="338" r="6" fill="#5b7cff" />
+        <circle cx="30" cy="502" r="6" fill="#d8ff2c" />
       </svg>
-
-      <div className="hero-illustration-note">
-        <span>{t.heroVisualKicker}</span>
-        <strong>{t.heroVisualTitle}</strong>
-        <em>{locale === "ru" ? "Редакционная позиция" : "Tahririyat pozitsiyasi"}</em>
-        <p>{t.heroVisualCopy}</p>
-      </div>
 
       <svg className="hero-illustration-hex" viewBox="0 0 200 200" fill="none">
         <defs>
@@ -63,6 +51,21 @@ export function HeroIllustration({ locale }: { locale: Locale }) {
         <circle className="circuit-pulse" r="4" fill="#fff" opacity="0" />
       </svg>
 
+      <div className="hero-illustration-stat">
+        <span className="hero-illustration-stat-kicker">{t.heroVisualKicker}</span>
+        <strong>{t.heroVisualTitle}</strong>
+        <div className="hero-illustration-stat-row">
+          <div>
+            <b>{numberFormat.format(stats.year)}</b>
+            <small>{t.statsYearLabel}</small>
+          </div>
+          <div>
+            <b>{numberFormat.format(stats.today)}</b>
+            <small>{t.statsTodayLabel}</small>
+          </div>
+        </div>
+      </div>
+
       <div className="hero-illustration-card card-a">
         <div className="bars">
           <span className="bar" style={{ height: "30%", background: "#0d2bff" }} />
@@ -71,11 +74,6 @@ export function HeroIllustration({ locale }: { locale: Locale }) {
           <span className="bar" style={{ height: "100%", background: "#d8ff2c" }} />
         </div>
         <small>{t.heroCardGrowth}</small>
-      </div>
-
-      <div className="hero-illustration-card card-b">
-        <strong>24/7</strong>
-        <small>{t.heroCardControl}</small>
       </div>
 
       <div className="hero-illustration-card card-c">
