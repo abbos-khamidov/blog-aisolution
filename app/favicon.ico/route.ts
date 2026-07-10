@@ -1,13 +1,17 @@
+import fs from "node:fs/promises";
+import path from "node:path";
 import sharp from "sharp";
 
-const svg = `
+export async function GET() {
+  const logoPath = path.join(process.cwd(), "public", "brand", "logo-dark-transparent.png");
+  const logo = await fs.readFile(logoPath);
+  const dataUri = `data:image/png;base64,${logo.toString("base64")}`;
+  const svg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
   <rect width="64" height="64" rx="14" fill="#1c46d6"/>
-  <path d="M14 50V14h9.2l8.8 10.5 8.8-10.5H50v36h-8.2V27.8l-9 10.7-9-10.7V50H14Z" fill="#07070c"/>
+  <image href="${dataUri}" x="11" y="11" width="42" height="42" style="filter: brightness(0) saturate(100%);" />
 </svg>
 `;
-
-export async function GET() {
   const png = await sharp(Buffer.from(svg)).png().resize(32, 32).toBuffer();
   const header = Buffer.alloc(6 + 16);
 

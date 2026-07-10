@@ -61,7 +61,7 @@ export function BlogHome({ locale, activeFilter }: { locale: Locale; activeFilte
     <>
       <SiteHeader locale={locale} />
       <main>
-        <Hero locale={locale} />
+        <Hero locale={locale} stats={stats} />
         <HeroStats locale={locale} stats={stats} />
 
         <section className="ticker-invite" aria-label={t.tickerInvite}>
