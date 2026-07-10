@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <rect width="64" height="64" rx="14" fill="#1c46d6" />
-  <image href="/brand/logo-dark-transparent.png" x="11" y="11" width="42" height="42" style="filter: brightness(0) saturate(100%);" />
+  <image href="/brand/favicon-blue-black.png" x="0" y="0" width="64" height="64" />
 </svg>
