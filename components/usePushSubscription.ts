@@ -29,7 +29,10 @@ export function usePushSubscription(locale: Locale) {
         const existing = await registration.pushManager.getSubscription();
         setSubscribed(Boolean(existing));
       })
-      .catch(() => setSupported(false));
+      .catch(() => {
+        // Keep the control visible even if SW registration fails; the user
+        // should see a disabled button instead of the feature disappearing.
+      });
   }, []);
 
   async function subscribe(): Promise<boolean> {

@@ -8,36 +8,6 @@ type Props = {
   locale: Locale;
 };
 
-const MARK_SELECTOR = "[data-aisolution-selection-mark='true']";
-
-function hasMarkedSelection() {
-  return document.querySelector(MARK_SELECTOR) !== null;
-}
-
-function unwrapMarks() {
-  document.querySelectorAll(MARK_SELECTOR).forEach((node) => {
-    const parent = node.parentNode;
-    if (!parent) return;
-
-    while (node.firstChild) {
-      parent.insertBefore(node.firstChild, node);
-    }
-
-    parent.removeChild(node);
-  });
-}
-
-function selectionInsideControl(selection: Selection) {
-  const anchor = selection.anchorNode;
-  const focus = selection.focusNode;
-  const anchorElement = anchor instanceof Element ? anchor : anchor?.parentElement;
-  const focusElement = focus instanceof Element ? focus : focus?.parentElement;
-
-  return Boolean(
-    anchorElement?.closest(".selection-clear-button") || focusElement?.closest(".selection-clear-button")
-  );
-}
-
 export function SelectionClearButton({ locale }: Props) {
   const t = dictionary[locale];
   const [mounted, setMounted] = useState(false);
@@ -45,50 +15,25 @@ export function SelectionClearButton({ locale }: Props) {
 
   useEffect(() => {
     setMounted(true);
-    setActive(hasMarkedSelection());
 
-    const commitSelection = () => {
+    const update = () => {
       const selection = window.getSelection();
-      if (!selection || selection.rangeCount === 0 || selection.isCollapsed) return;
-      if (!selection.toString().trim()) return;
-      if (selectionInsideControl(selection)) return;
-
-      const range = selection.getRangeAt(0);
-      const wrapper = document.createElement("span");
-      wrapper.dataset.aisolutionSelectionMark = "true";
-      wrapper.className = "selection-mark";
-
-      try {
-        wrapper.appendChild(range.extractContents());
-        range.insertNode(wrapper);
-        selection.removeAllRanges();
-        setActive(true);
-      } catch {
-        // If the selection cannot be wrapped cleanly, leave the browser's
-        // native selection intact instead of breaking the page.
-        setActive(selection.toString().trim().length > 0 || hasMarkedSelection());
-      }
+      setActive(Boolean(selection && !selection.isCollapsed && selection.toString().trim().length > 0));
     };
 
-    const syncActive = () => {
-      setActive(hasMarkedSelection());
-    };
-
-    document.addEventListener("mouseup", commitSelection);
-    document.addEventListener("pointerup", commitSelection);
-    document.addEventListener("keyup", commitSelection);
-    document.addEventListener("selectionchange", syncActive);
+    update();
+    document.addEventListener("selectionchange", update);
+    document.addEventListener("pointerup", update);
+    document.addEventListener("keyup", update);
 
     return () => {
-      document.removeEventListener("mouseup", commitSelection);
-      document.removeEventListener("pointerup", commitSelection);
-      document.removeEventListener("keyup", commitSelection);
-      document.removeEventListener("selectionchange", syncActive);
+      document.removeEventListener("selectionchange", update);
+      document.removeEventListener("pointerup", update);
+      document.removeEventListener("keyup", update);
     };
   }, []);
 
   const clearSelection = () => {
-    unwrapMarks();
     window.getSelection()?.removeAllRanges();
     setActive(false);
   };
