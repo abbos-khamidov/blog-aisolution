@@ -5,6 +5,7 @@ import { ContentPostCard } from "@/components/ContentPostCard";
 import { SiteHeader } from "@/components/SiteHeader";
 import { dictionary, getLocale, locales, type Locale } from "@/lib/i18n";
 import { getRatedPosts } from "@/lib/content";
+import { buildWebsiteGraph } from "@/lib/jsonld";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -40,9 +41,12 @@ export default async function RatingPage({ params }: Props) {
   const locale = getLocale(rawLocale);
   const t = dictionary[locale];
   const posts = getRatedPosts(locale);
+  const graph = buildWebsiteGraph();
 
   return (
     <>
+      {/* eslint-disable-next-line react/no-danger */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }} />
       <SiteHeader locale={locale} compact />
       <main className="article-shell rating-page">
         <nav className="breadcrumbs" aria-label="Breadcrumb">
