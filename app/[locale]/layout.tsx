@@ -41,9 +41,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: t.metaDescription,
     keywords: ["aisolution", "ai solution", "startup evaluation", "оценка стартапов", "ai startups"],
     icons: {
-      icon: "/favicon.svg?v=3",
-      shortcut: "/favicon.svg?v=3",
-      apple: "/favicon.svg?v=3"
+      icon: "/favicon.svg?v=4",
+      shortcut: "/favicon.svg?v=4",
+      apple: "/favicon.svg?v=4"
     },
     openGraph: {
       title: t.metaTitle,
