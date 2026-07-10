@@ -6,7 +6,14 @@ import { Reveal } from "./Reveal";
 import { SiteHeader } from "./SiteHeader";
 import type { Locale } from "@/lib/i18n";
 import { dictionary } from "@/lib/i18n";
-import { clusterMeta, getClustersInUse, getOpinionPosts, getPublishedPosts, getStartupStats } from "@/lib/content";
+import {
+  clusterMeta,
+  getClustersInUse,
+  getOpinionPosts,
+  getPublishedPosts,
+  getStartupStats,
+  getStartupSurvivalStats
+} from "@/lib/content";
 
 const feedFilters = [
   { key: "all", labels: { ru: "Все", uz: "Barchasi" } },
@@ -38,6 +45,7 @@ export function BlogHome({ locale, activeFilter }: { locale: Locale; activeFilte
   const opinionPosts = getOpinionPosts(locale).slice(0, 2);
   const clusters = getClustersInUse(locale);
   const stats = getStartupStats(locale);
+  const survival = getStartupSurvivalStats(locale);
   const tickerSignals =
     locale === "ru"
       ? [
@@ -61,8 +69,8 @@ export function BlogHome({ locale, activeFilter }: { locale: Locale; activeFilte
     <>
       <SiteHeader locale={locale} />
       <main>
-        <Hero locale={locale} stats={stats} />
-        <HeroStats locale={locale} stats={stats} />
+        <Hero locale={locale} stats={stats} survival={survival} />
+        <HeroStats locale={locale} stats={stats} survival={survival} />
 
         <section className="ticker-invite" aria-label={t.tickerInvite}>
           <p>{t.tickerInvite}</p>

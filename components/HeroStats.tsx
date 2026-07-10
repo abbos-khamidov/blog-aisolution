@@ -45,11 +45,21 @@ function useCountUp(target: number, active = true) {
   return value;
 }
 
-function StatTile({ label, value, locale }: { label: string; value: number; locale: Locale }) {
+function StatTile({
+  label,
+  value,
+  locale,
+  accent
+}: {
+  label: string;
+  value: number;
+  locale: Locale;
+  accent?: boolean;
+}) {
   const animated = useCountUp(value, true);
   const numberFormat = new Intl.NumberFormat(locale === "uz" ? "uz-UZ" : "ru-RU");
   return (
-    <div className="hero-stat">
+    <div className={`hero-stat${accent ? " hero-stat-accent" : ""}`}>
       <strong>{numberFormat.format(animated)}</strong>
       <span>{label}</span>
     </div>
