@@ -66,6 +66,16 @@ a {
   text-decoration: none;
 }
 
+::selection {
+  background: var(--brand-orange);
+  color: #07070c;
+}
+
+::-moz-selection {
+  background: var(--brand-orange);
+  color: #07070c;
+}
+
 @media (hover: hover) and (pointer: fine) {
   body {
     cursor: url("/cursor-pencil.svg") 5 23, auto;
@@ -495,6 +505,29 @@ p {
   text-transform: uppercase;
 }
 
+.hero-illustration-stat-survived {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 2px dashed rgba(7, 7, 12, 0.3);
+}
+
+.hero-illustration-stat-survived b {
+  font-size: 18px;
+  font-weight: 950;
+  color: var(--brand-blue);
+}
+
+.hero-illustration-stat-survived span {
+  color: #4a4a58;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
 .hero-illustration-hex {
   position: absolute;
   top: 50%;
@@ -799,6 +832,15 @@ p {
   font-weight: 900;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+
+.hero-stat-accent {
+  border-color: var(--brand-blue);
+  background: color-mix(in srgb, var(--brand-blue) 6%, var(--surface));
+}
+
+.hero-stat-accent strong {
+  color: var(--brand-blue);
 }
 
 /* ---------- ticker ---------- */
