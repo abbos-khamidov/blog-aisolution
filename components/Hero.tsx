@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useLayoutEffect, useRef } from "react";
+import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { HeroIllustration } from "./HeroIllustration";
 import { dictionary, type Locale } from "@/lib/i18n";
@@ -9,6 +9,14 @@ export function Hero({ locale }: { locale: Locale }) {
   const t = dictionary[locale];
   const rootRef = useRef<HTMLElement>(null);
   const words = t.heroTitle.split(" ");
+  const signalFrames = useMemo(
+    () =>
+      locale === "ru"
+        ? ["Startups / Verdicts", "Data / No hype", "Risk / Market / Money", "Signal / Not noise"]
+        : ["Startaplar / Verdict", "Data / Hype emas", "Risk / Bozor / Pul", "Signal / Shovqin emas"],
+    [locale]
+  );
+  const [signalText, setSignalText] = useState(signalFrames[0]);
 
   useLayoutEffect(() => {
     const root = rootRef.current;
@@ -60,13 +68,76 @@ export function Hero({ locale }: { locale: Locale }) {
     };
   }, []);
 
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
+      setSignalText(signalFrames[0]);
+      return undefined;
+    }
+
+    let alive = true;
+    let timeout = 0;
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let phase: "typing" | "holding" | "erasing" = "typing";
+
+    const tick = () => {
+      if (!alive) return;
+      const phrase = signalFrames[phraseIndex];
+
+      if (phase === "typing") {
+        charIndex += 1;
+        setSignalText(phrase.slice(0, charIndex));
+        if (charIndex >= phrase.length) {
+          phase = "holding";
+          timeout = window.setTimeout(tick, 1100);
+          return;
+        }
+        timeout = window.setTimeout(tick, 80);
+        return;
+      }
+
+      if (phase === "holding") {
+        phase = "erasing";
+        timeout = window.setTimeout(tick, 180);
+        return;
+      }
+
+      if (phase === "erasing") {
+        charIndex -= 1;
+        setSignalText(phrase.slice(0, Math.max(0, charIndex)));
+        if (charIndex <= 0) {
+          phraseIndex = (phraseIndex + 1) % signalFrames.length;
+          phase = "typing";
+          charIndex = 0;
+          timeout = window.setTimeout(tick, 220);
+          return;
+        }
+        timeout = window.setTimeout(tick, 32);
+        return;
+      }
+
+    };
+
+    timeout = window.setTimeout(tick, 220);
+    return () => {
+      alive = false;
+      window.clearTimeout(timeout);
+    };
+  }, [signalFrames]);
+
   return (
     <section className="hero" ref={rootRef}>
       <div className="hero-aurora" />
       <div className="hero-content">
         <div className="hero-label-row">
           <p className="kicker">{t.heroKicker}</p>
-          <span className="signal-pill">{t.heroSignal}</span>
+          <span className="signal-pill" aria-live="off">
+            <span className="signal-pill-text">{signalText}</span>
+            <span className="signal-cursor" aria-hidden="true">
+              |
+            </span>
+          </span>
         </div>
         <h1>
           {words.map((word, i) => (

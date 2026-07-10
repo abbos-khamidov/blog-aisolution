@@ -13,16 +13,23 @@ export function HeroIllustration({ locale }: { locale: Locale }) {
     <div className="hero-illustration" aria-hidden="true">
       <svg className="hero-illustration-leftwave" viewBox="0 0 120 520" fill="none">
         <path
-          d="M18 20 C42 80 0 124 28 180 C56 236 18 286 40 344 C62 402 34 452 58 500"
+          d="M20 18 C42 70 8 122 30 176 C52 230 16 284 38 338 C60 392 30 448 54 502"
           stroke="#d8ff2c"
-          strokeWidth="4"
+          strokeWidth="5"
           strokeLinecap="round"
           strokeDasharray="12 12"
         />
-        <circle cx="18" cy="20" r="6" fill="#fff" />
-        <circle cx="28" cy="180" r="6" fill="#ff5b1f" />
-        <circle cx="40" cy="344" r="6" fill="#5b7cff" />
-        <circle cx="58" cy="500" r="6" fill="#d8ff2c" />
+        <path
+          d="M14 72 L54 72 L54 126 L88 126"
+          stroke="#ff5b1f"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <circle cx="20" cy="18" r="7" fill="#fff" />
+        <circle cx="30" cy="176" r="7" fill="#ff5b1f" />
+        <circle cx="38" cy="338" r="7" fill="#5b7cff" />
+        <circle cx="54" cy="502" r="7" fill="#d8ff2c" />
       </svg>
 
       <div className="hero-illustration-note">
