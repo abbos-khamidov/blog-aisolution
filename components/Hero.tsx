@@ -98,22 +98,12 @@ export function Hero({ locale }: { locale: Locale }) {
       }
 
       if (phase === "holding") {
-        phase = "erasing";
-        timeout = window.setTimeout(tick, 180);
-        return;
-      }
-
-      if (phase === "erasing") {
-        charIndex -= 1;
-        setSignalText(phrase.slice(0, Math.max(0, charIndex)));
-        if (charIndex <= 0) {
-          phraseIndex = (phraseIndex + 1) % signalFrames.length;
-          phase = "typing";
-          charIndex = 0;
-          timeout = window.setTimeout(tick, 220);
-          return;
-        }
-        timeout = window.setTimeout(tick, 32);
+        phraseIndex = (phraseIndex + 1) % signalFrames.length;
+        const nextPhrase = signalFrames[phraseIndex];
+        phase = "typing";
+        charIndex = 1;
+        setSignalText(nextPhrase.slice(0, charIndex));
+        timeout = window.setTimeout(tick, 80);
         return;
       }
 
