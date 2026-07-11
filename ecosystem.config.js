@@ -10,8 +10,8 @@ module.exports = {
         HOSTNAME: "127.0.0.1"
       },
       max_memory_restart: "400M",
-      instances: 1,
-      exec_mode: "fork"
+      instances: 2,
+      exec_mode: "cluster"
     }
   ]
 };
