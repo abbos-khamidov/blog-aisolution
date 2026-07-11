@@ -4,7 +4,8 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
-      allow: "/"
+      allow: "/",
+      disallow: "/api/"
     },
     sitemap: "https://blog.aisolution.uz/sitemap.xml",
     host: "blog.aisolution.uz"
