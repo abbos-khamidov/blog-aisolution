@@ -6,7 +6,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  return NextResponse.redirect(new URL("/ru", "https://blog.aisolution.uz"), 308);
+  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host") ?? request.nextUrl.host;
+  const proto = request.headers.get("x-forwarded-proto") ?? request.nextUrl.protocol.replace(":", "");
+  const url = new URL("/ru", `${proto}://${host}`);
+  return NextResponse.redirect(url, 308);
 }
 
 export const config = {
