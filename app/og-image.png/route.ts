@@ -37,7 +37,7 @@ export async function GET() {
   return new Response(new Uint8Array(png), {
     headers: {
       "Content-Type": "image/png",
-      "Cache-Control": "no-cache, no-store, must-revalidate"
+      "Cache-Control": "public, max-age=31536000, immutable"
     }
   });
 }

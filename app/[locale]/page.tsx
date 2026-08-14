@@ -6,8 +6,9 @@ import { buildWebsiteGraph } from "@/lib/jsonld";
 
 type Props = {
   params: Promise<{ locale: string }>;
-  searchParams?: Promise<{ filter?: string }>;
 };
+
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -22,16 +23,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: `/${locale}`,
       languages: {
         ru: "/ru",
-        uz: "/uz"
+        uz: "/uz",
+        "x-default": "/ru"
       }
     }
   };
 }
 
-export default async function LocaleHomePage({ params, searchParams }: Props) {
+export default async function LocaleHomePage({ params }: Props) {
   const { locale: rawLocale } = await params;
   if (!locales.includes(rawLocale as Locale)) notFound();
-  const query = await searchParams;
 
   const graph = buildWebsiteGraph();
 
@@ -39,7 +40,7 @@ export default async function LocaleHomePage({ params, searchParams }: Props) {
     <>
       {/* eslint-disable-next-line react/no-danger */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }} />
-      <BlogHome locale={getLocale(rawLocale)} activeFilter={query?.filter} />
+      <BlogHome locale={getLocale(rawLocale)} />
     </>
   );
 }

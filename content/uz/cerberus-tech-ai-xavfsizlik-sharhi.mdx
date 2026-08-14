@@ -1,0 +1,54 @@
+---
+title: "Cerberus Tech: AI bank himoyasidagi teshiklarni $8 ga topadi"
+description: "Avtonom AI-pentest: $8 — ilova tekshiruvi, $60k — yillik korporativ litsenziya, o'zbek banklarida pilot loyihalar. Bozorning eng kuchli da'volaridan biri."
+slug: "cerberus-tech-ai-xavfsizlik-sharhi"
+lang: "uz"
+publishedAt: "2026-08-14"
+updatedAt: "2026-08-14"
+author: "aisolution"
+topicCluster: "otrasli"
+category: "startup"
+keywords: ["cerberus tech", "ai xavfsizlik", "pentest ai", "kiberxavfsizlik ozbekiston", "500 global"]
+rating: 7.8
+translationOf: "cerberus-tech-ai-security-review"
+serviceLink: "/contacts"
+cover: "/covers/competitor-ai-tools.png"
+coverLabel: "CERBERUS"
+draft: false
+---
+
+> Asoschi bu startapdan oldin ham xavfsizlik auditini sotgan. Bu bozorda kamdan-kam holat — AI-kompaniyalarning yarmi g'oya sotadi, tajriba emas.
+
+Odatda, asoschi o'z mahsulotini "sizni xakerlardan oldin buzadigan AI" deb atasa, bu vkladkani yopishga bahona. Lekin Cerberus Tech'da bu shior ostida ishlayotgan biznesi bor odam turibdi, 12 slaydli pitchli uchinchi kurs talabasi emas. Nega bu masalani o'zgartirishini tahlil qilamiz.
+
+## Nima sotishadi
+
+Toshkentlik Cerberus Tech korporativ ilova va tizimlardagi zaifliklarni avtonom qidiradigan AI-pentest platformasini quryapti — qo'lda uch hafta davomida endpointlarni tekshiradigan odamsiz. Bitta ilovani tekshirish narxi ~$8 va bir necha soat vaqt oladi, bozordagi odatiy $3,000–15,000 va bir-ikki hafta kutish o'rniga. Texnik yordam bilan korporativ litsenziya yiliga $60,000 dan boshlanadi — va aynan shu yerda kompaniya bitta serverli startaplarga emas, balki komplaens bo'limi va security byudjetiga ega banklarga mo'ljallanganini ko'rish mumkin.
+
+## Nega bu oddiy "nmap ustidagi GPT o'rami" emas
+
+Cerberus va GitHub'dagi o'nlab shunga o'xshash loyihalar orasidagi farq — bitta aniq muhandislik detalida: jamoa AI-agent vazifa doirasida aynan nima qila olishini qat'iy cheklaydigan o'z dasturlash tilini yozgan. Bu "yaxshi xulq-atvor" haqidagi promt emas — bu ranttayim darajasidagi arxitektura cheklovi bo'lib, model skanerlash perimetridan jismonan chiqib, masalan, jadvallarni o'chirish yoki bank prod-ma'lumotlariga tegishni fizik jihatdan qila olmaydi. Mijoz uchun bu asosiy qo'rquvni yechadigan aynan shu argument — "sizning AI'ingiz o'zi zaiflikka aylanib qolsa-chi".
+
+Bu konstruksiya amalda qanchalik mustahkamligini hech kim ochiq audit qilmagan — kompaniya o'z cheklov tilining mustaqil tekshiruvini e'lon qilmagan. Bu yerda ishonch hozircha jamoa obro'siga asoslangan, e'lon qilingan kod tahliliga emas.
+
+## Aziz Ahmedxodjayev — bu "g'oyali startaper" emas
+
+Asoschi, Aziz Ahmedxodjayev, Cerberus'dan oldin C7 Cybersecurity — ishlaydigan axborot xavfsizligi audit kompaniyasini qurgan, pet-loyiha emas. 17 yoshida dasturlash tillari xavfsizligida nazariy yutuqqa erishgan, 18 yoshida esa Scottish Programming Languages and Verification Summer School'ning eng yosh ishtirokchisi bo'lgan — bu yerga LinkedIn profilidagi surat bo'yicha qabul qilishmaydi. Bu mintaqaviy AI-startap uchun kamdan-kam uchraydigan profil: asoschi allaqachon enterprise-mijozlarga security sotgan va haqiqiy audit blogdagi checklist'dan nimasi bilan farq qilishini biladi.
+
+Cerberus 500 Global akseleratoridan o'tgan va AQShda yuridik shaxs ro'yxatdan o'tkazgan — yil oxirigacha AQSh, Yevropa va Buyuk Britaniyaga chiqishni rejalashtirayotgan jamoa uchun standart qadam.
+
+## Banklardagi pilotlar — bu hali shartnoma emas
+
+Bir nechta o'zbek banklari hozir uch oylik pilotdan o'tmoqda. Bu jiddiy eshitiladi, va bu haqiqatan jiddiy — bank o'z infratuzilmasiga har kimni qo'yib bermaydi, demak komplaens allaqachon dastlabki roziligini bergan. Ammo pilot — bu "bizga hech narsani buzmasligini tekshiramiz" bosqichi, "$60,000'lik yillik shartnoma imzoladik" emas. Pilot va litsenziyani uzaytirish orasida odatda bitta og'riqli savol turadi: birinchi haqiqiy hisobot qanday zaifliklarni ko'rsatadi va bank security-jamoasi buni false positive'larga cho'kmasdan qanchalik tez qayta ishlay oladi.
+
+## Jonli pentester yollasa-chi
+
+Bank moliya direktoridan mantiqiy savol: nega yiliga $60,000 to'lash kerak, agar bir martalik $5,000–10,000'ga security-agentlik yollash mumkin bo'lsa? Javob chastotada, bir martalik narxda emas. Klassik audit — bu tizimning bir kunlik fotosurati: yangi reliz deploy qilingandan bir oy o'tib himoya boshqacha ko'rinishi mumkin, keyingi audit esa eng yaxshi holatda olti oydan keyin buyurtma qilinadi. $8 bir tekshiruv narxida bank texnik jihatdan har muhim relizdan keyin tekshiruvni ishga tushira oladi, komplaens taqvimi bo'yicha choraklik emas. Bu modelning o'zini o'zgartiradi — yiliga bir marta "teshikni ushladik, kech bo'lmasdan" emas, balki muammoni undan kamroq do'stona odam topishidan oldin ushlashi kerak bo'lgan uzluksiz monitoring. Nazariyada — chunki amalda bu faqat bank tekshiruvlarni haqiqatan CI/CD'ga o'rnatsa ishlaydi, litsenziya sotib olib, uzaytirishgacha unutib qo'ymasa.
+
+## AISOLUTION xulosasi
+
+Bu to'plamdagi uchta startap orasida eng kuchli da'vo. O'sha nishada real biznes tajribasiga ega asoschi, aniq tekshirsa bo'ladigan narxlar ("so'rov bo'yicha" emas — bu odatda narx umuman yo'qligini yashiradi), mijozning eng aniq qo'rquviga javob beradigan muhandislik yechimi va allaqachon pilotlar orqali tasdiqlangan enterprise-segment qiziqishi. Bu Markaziy Osiyo bozori uchun kamdan-kam uchraydigan kombinatsiya.
+
+Xavf odatdagidek yosh security-kompaniyada bo'ladigan joyda: AI cheklash texnologiyasiga ishonch jamoa so'ziga asoslangan, bank pilotlari esa uzaytirilgunga qadar pilot bo'lib qoladi. Bu pilotlar to'lovli shartnomalar bilan yopiladimi — buni kuzatamiz, chiroyli arxitektura emas, aynan shu savol bu real biznesmi yoki yaxshi qadoqlangan demo-versiyami degan savolga javob beradi.
+
+Manba: [THE TECH](https://the-tech.kz/faunder-iz-uzbekistana-sozdal-startap-kotoryj-proveryaet-bezopasnost-kompanij-s-pomoshhyu-ai/)

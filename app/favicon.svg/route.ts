@@ -13,7 +13,7 @@ export async function GET() {
   return new Response(svg.trim(), {
     headers: {
       "Content-Type": "image/svg+xml; charset=utf-8",
-      "Cache-Control": "no-cache, no-store, must-revalidate"
+      "Cache-Control": "public, max-age=31536000, immutable"
     }
   });
 }

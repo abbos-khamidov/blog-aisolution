@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { PostCover } from "./PostCover";
 import { resolveAuthor } from "@/lib/authors";
-import { clusterMeta, formatDate, getVerdict, type Post } from "@/lib/content";
+import { clusterMeta, formatDate, getVerdict, type Post } from "@/lib/post-display";
 import { dictionary, type Locale } from "@/lib/i18n";
 
 type Props = {

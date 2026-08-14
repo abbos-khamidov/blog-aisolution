@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { clusterAccent, clusterCoverImage, clusterMeta } from "@/lib/content";
+import { clusterAccent, clusterCoverImage, clusterMeta } from "@/lib/post-display";
 import type { Locale } from "@/lib/i18n";
 import type { TopicCluster } from "@/lib/schema";
 

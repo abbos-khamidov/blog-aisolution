@@ -1,5 +1,7 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { ContentPostCard } from "./ContentPostCard";
+import { FeedFilterGrid, FeedFilterNav } from "./FeedFilter";
 import { Hero } from "./Hero";
 import { HeroStats } from "./HeroStats";
 import { Reveal } from "./Reveal";
@@ -15,33 +17,9 @@ import {
   getStartupSurvivalStats
 } from "@/lib/content";
 
-const feedFilters = [
-  { key: "all", labels: { ru: "Все", uz: "Barchasi" } },
-  { key: "aisolution", labels: { ru: "AISOLUTION", uz: "AISOLUTION" } },
-  { key: "startup", labels: { ru: "Стартапы", uz: "Startaplar" } },
-  { key: "product", labels: { ru: "Продукты", uz: "Mahsulotlar" } },
-  { key: "education", labels: { ru: "AI обучение", uz: "AI ta'lim" } },
-  { key: "mnenie", labels: { ru: "Мнения", uz: "Fikrlar" } }
-] as const;
-
-type FeedFilter = (typeof feedFilters)[number]["key"];
-
-function getFeedFilter(value?: string): FeedFilter {
-  return feedFilters.some((filter) => filter.key === value) ? (value as FeedFilter) : "all";
-}
-
-function postMatchesFilter(post: ReturnType<typeof getPublishedPosts>[number], filter: FeedFilter): boolean {
-  if (filter === "all") return true;
-  if (filter === "aisolution") return post.coverLabel === "AISOLUTION";
-  if (filter === "startup" || filter === "product") return post.category === filter;
-  if (filter === "mnenie") return post.topicCluster === "mnenie";
-  return post.coverLabel === "AI EDUCATION";
-}
-
-export function BlogHome({ locale, activeFilter }: { locale: Locale; activeFilter?: string }) {
+export function BlogHome({ locale }: { locale: Locale }) {
   const t = dictionary[locale];
-  const filter = getFeedFilter(activeFilter);
-  const posts = getPublishedPosts(locale).filter((post) => postMatchesFilter(post, filter));
+  const posts = getPublishedPosts(locale);
   const opinionPosts = getOpinionPosts(locale).slice(0, 2);
   const clusters = getClustersInUse(locale);
   const stats = getStartupStats(locale);
@@ -130,23 +108,21 @@ export function BlogHome({ locale, activeFilter }: { locale: Locale; activeFilte
               <h2>{t.feedTitle}</h2>
               <p className="section-copy">{t.feedCopy}</p>
             </div>
-            <nav className="filter-pills" aria-label="Feed filter">
-              {feedFilters.map((item) => (
-                <Link
-                  key={item.key}
-                  className={filter === item.key ? "is-active" : ""}
-                  href={item.key === "all" ? `/${locale}#feed` : `/${locale}?filter=${item.key}#feed`}
-                >
-                  {item.labels[locale]}
-                </Link>
-              ))}
-            </nav>
+            <Suspense fallback={null}>
+              <FeedFilterNav locale={locale} />
+            </Suspense>
           </div>
-          <Reveal className="post-grid">
-            {posts.map((post, index) => (
-              <ContentPostCard key={post.slug} post={post} locale={locale} badge={index === 0 ? "new" : undefined} />
-            ))}
-          </Reveal>
+          <Suspense
+            fallback={
+              <Reveal className="post-grid">
+                {posts.map((post, index) => (
+                  <ContentPostCard key={post.slug} post={post} locale={locale} badge={index === 0 ? "new" : undefined} />
+                ))}
+              </Reveal>
+            }
+          >
+            <FeedFilterGrid posts={posts} locale={locale} />
+          </Suspense>
         </section>
 
         <section className="feed-section" id="opinion">

@@ -27,7 +27,7 @@ export async function GET() {
   return new Response(ico, {
     headers: {
       "Content-Type": "image/x-icon",
-      "Cache-Control": "no-cache, no-store, must-revalidate"
+      "Cache-Control": "public, max-age=86400"
     }
   });
 }
