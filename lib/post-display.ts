@@ -105,10 +105,20 @@ export function getVerdict(rating: number): "up" | "average" | "down" {
   return "down";
 }
 
+// Many browsers ship without Uzbek ICU data and print "2026 M08 14" instead of
+// "14-avg, 2026" — which also differs from the server render and breaks
+// hydration. Uzbek month names are therefore spelled out here, not via Intl.
+const UZ_MONTHS = ["yan", "fev", "mar", "apr", "may", "iyn", "iyl", "avg", "sen", "okt", "noy", "dek"];
+
+function pad(value: number): string {
+  return String(value).padStart(2, "0");
+}
+
+/** Calendar date (YYYY-MM-DD frontmatter) → "14-avg, 2026" / "14 авг. 2026 г." */
 export function formatDate(value: string, locale: Locale): string {
-  return new Intl.DateTimeFormat(locale === "uz" ? "uz-UZ" : "ru-RU", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric"
-  }).format(new Date(`${value}T00:00:00Z`));
+  const date = new Date(`${value}T00:00:00Z`);
+  if (locale === "uz") {
+    return `${pad(date.getUTCDate())}-${UZ_MONTHS[date.getUTCMonth()]}, ${date.getUTCFullYear()}`;
+  }
+  return new Intl.DateTimeFormat("ru-RU", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" }).format(date);
 }

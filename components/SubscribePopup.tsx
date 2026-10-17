@@ -2,18 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { dictionary, type Locale } from "@/lib/i18n";
+import { getBrowserStorage as safeStorage } from "@/lib/browser-storage";
 import { usePushSubscription } from "./usePushSubscription";
 
 const DISMISS_KEY = "aisolution-subscribe-popup-dismissed";
 const DELAY_MS = 15000;
-
-function safeStorage() {
-  try {
-    return window.localStorage;
-  } catch {
-    return null;
-  }
-}
 
 export function SubscribePopup({ locale }: { locale: Locale }) {
   const t = dictionary[locale];
