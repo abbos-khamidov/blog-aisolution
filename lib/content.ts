@@ -7,6 +7,15 @@ import { clusterAccent, clusterCoverImage, clusterMeta, formatDate, getVerdict, 
 import { parseFrontmatter, topicClusters, type TopicCluster } from "./schema";
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
+/**
+ * Posts written from the admin panel (/admin). They live next to the push
+ * subscriptions in data/ — outside git, so `git pull` on deploy never
+ * overwrites them. A file here with the same locale + slug as a repo post
+ * replaces that post (that's how the admin edits or hides a repo post).
+ */
+export const ADMIN_POSTS_DIR = path.join(process.cwd(), "data", "posts");
+
+export type PostSource = "repo" | "admin";
 const WORDS_PER_MINUTE = 200;
 const TASHKENT_TIME_ZONE = "Asia/Tashkent";
 
@@ -19,15 +28,15 @@ function estimateReadMinutes(content: string): number {
   return Math.max(1, Math.round(words / WORDS_PER_MINUTE));
 }
 
-function readMdxFileNames(locale: Locale): string[] {
-  const dir = path.join(CONTENT_DIR, locale);
+function readMdxFileNames(locale: Locale, baseDir = CONTENT_DIR): string[] {
+  const dir = path.join(baseDir, locale);
   if (!fs.existsSync(dir)) return [];
   return fs.readdirSync(dir).filter((file) => file.endsWith(".mdx"));
 }
 
-function loadPost(locale: Locale, fileName: string): Post {
-  const filePath = path.join(CONTENT_DIR, locale, fileName);
-  const relativeName = `content/${locale}/${fileName}`;
+function loadPost(locale: Locale, fileName: string, baseDir = CONTENT_DIR): Post {
+  const filePath = path.join(baseDir, locale, fileName);
+  const relativeName = `${baseDir === CONTENT_DIR ? "content" : "data/posts"}/${locale}/${fileName}`;
   const raw = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(raw);
 
@@ -59,8 +68,40 @@ function loadPost(locale: Locale, fileName: string): Post {
   };
 }
 
+/** Admin posts that fail validation are skipped (and logged) instead of taking the whole site down. */
+function loadAdminPosts(locale: Locale): Post[] {
+  return readMdxFileNames(locale, ADMIN_POSTS_DIR).flatMap((fileName) => {
+    try {
+      return [loadPost(locale, fileName, ADMIN_POSTS_DIR)];
+    } catch (error) {
+      console.error(`[admin posts] skipped data/posts/${locale}/${fileName}: ${(error as Error).message}`);
+      return [];
+    }
+  });
+}
+
+export function getPostSources(): Map<string, PostSource> {
+  const sources = new Map<string, PostSource>();
+  for (const locale of locales) {
+    for (const file of readMdxFileNames(locale)) sources.set(`${locale}/${file.replace(/\.mdx$/, "")}`, "repo");
+    for (const file of readMdxFileNames(locale, ADMIN_POSTS_DIR)) sources.set(`${locale}/${file.replace(/\.mdx$/, "")}`, "admin");
+  }
+  return sources;
+}
+
+export function hasRepoPost(locale: Locale, slug: string): boolean {
+  return fs.existsSync(path.join(CONTENT_DIR, locale, `${slug}.mdx`));
+}
+
 function loadAllPosts(): Post[] {
-  return locales.flatMap((locale) => readMdxFileNames(locale).map((fileName) => loadPost(locale, fileName)));
+  return locales.flatMap((locale) => {
+    const fromAdmin = loadAdminPosts(locale);
+    const overridden = new Set(fromAdmin.map((post) => post.slug));
+    const fromRepo = readMdxFileNames(locale)
+      .filter((fileName) => !overridden.has(fileName.replace(/\.mdx$/, "")))
+      .map((fileName) => loadPost(locale, fileName));
+    return [...fromRepo, ...fromAdmin];
+  });
 }
 
 export function getAllPosts(): Post[] {
@@ -138,6 +179,11 @@ export function getStartupSurvivalStats(
 
 export function getPostBySlug(locale: Locale, slug: string): Post | undefined {
   return getPublishedPosts(locale).find((post) => post.slug === slug);
+}
+
+/** Like getPostBySlug, but drafts included — for the admin panel only, never for public pages. */
+export function getPostForAdmin(locale: Locale, slug: string): Post | undefined {
+  return loadAllPosts().find((post) => post.lang === locale && post.slug === slug);
 }
 
 export function getPostsByCluster(
