@@ -4,11 +4,13 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypePrettyCode from "rehype-pretty-code";
 import { ContentPostCard } from "@/components/ContentPostCard";
+import { PostActions } from "@/components/PostActions";
 import { PostCover } from "@/components/PostCover";
+import { ScoreRing } from "@/components/ScoreRing";
 import { ServiceCta } from "@/components/service-cta";
 import { SiteHeader } from "@/components/SiteHeader";
 import { resolveAuthor } from "@/lib/authors";
-import { clusterMeta, formatDate, getPostBySlug, getPublishedPosts, getRelatedPosts, getTranslation } from "@/lib/content";
+import { clusterMeta, formatDate, getPostBySlug, getPublishedPosts, getRelatedPosts, getTranslation, getVerdict } from "@/lib/content";
 import { dictionary, getLocale, locales, type Locale } from "@/lib/i18n";
 import { authorUrl, buildArticleGraph } from "@/lib/jsonld";
 
@@ -84,6 +86,9 @@ export default async function ArticlePage({ params }: Props) {
   const cluster = clusterMeta[post.topicCluster];
   const related = getRelatedPosts(post, 3);
   const graph = buildArticleGraph(post);
+  const verdict = getVerdict(post.rating);
+  const verdictLabel =
+    verdict === "up" ? t.ratingVerdictUp : verdict === "average" ? t.ratingVerdictAverage : t.ratingVerdictDown;
 
   return (
     <>
@@ -118,6 +123,7 @@ export default async function ArticlePage({ params }: Props) {
             </div>
             <h1>{post.title}</h1>
             <p className="lead">{post.description}</p>
+            <PostActions locale={locale} slug={post.slug} />
 
             <div className="mdx-body">
               <MDXRemote
@@ -142,10 +148,15 @@ export default async function ArticlePage({ params }: Props) {
               ))}
             </div>
 
-            <div className="article-rating" aria-label={`${t.ratingLabel}: ${post.rating} / 10`}>
-              <span>{t.ratingLabel}</span>
-              <strong>{post.rating.toFixed(1)}/10</strong>
+            <div className={`article-rating verdict-${verdict}`} aria-label={`${t.ratingLabel}: ${post.rating} / 10`}>
+              <ScoreRing rating={post.rating} size="lg" />
+              <div>
+                <span>{t.ratingLabel}</span>
+                <strong>{verdictLabel}</strong>
+              </div>
             </div>
+
+            <PostActions locale={locale} slug={post.slug} />
           </div>
         </article>
 

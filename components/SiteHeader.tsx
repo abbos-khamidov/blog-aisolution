@@ -1,49 +1,44 @@
 import Link from "next/link";
 import { Brand } from "./Brand";
 import { PushSubscribe } from "./PushSubscribe";
+import { SavedLink } from "./SavedLink";
 import { ThemeToggle } from "./ThemeToggle";
+import { LiveStats } from "./live/LiveStats";
 import type { Locale } from "@/lib/i18n";
 import { dictionary } from "@/lib/i18n";
 
 type Props = {
   locale: Locale;
+  /** Kept for API compatibility with existing pages; the nav is shown everywhere now. */
   compact?: boolean;
 };
 
-export function SiteHeader({ locale, compact = false }: Props) {
+export function SiteHeader({ locale }: Props) {
   const t = dictionary[locale];
 
   return (
-    <header className={`site-header${compact ? " compact" : ""}`}>
-      <Brand href={`/${locale}`} />
-      {!compact && (
+    <header className="site-header">
+      <div className="site-header-bar">
+        <Brand href={`/${locale}`} />
         <nav className="top-nav" aria-label="Primary navigation">
-          <a href="#clusters">{t.navClusters}</a>
-          <a href={`/${locale}#feed`}>{t.navFeed}</a>
+          <Link href={`/${locale}#feed`}>{t.navFeed}</Link>
+          <Link href={`/${locale}/rating`}>{t.navRating}</Link>
           <Link href={`/${locale}/opinion`}>{t.navOpinion}</Link>
-          <Link href={`/${locale}/opinion#people`}>{t.navPeople}</Link>
-          <Link href={`/${locale}/opinion#directions`}>{t.navDirections}</Link>
-          <Link className="nav-rating" href={`/${locale}/rating`}>
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M8 4h8v3.5c0 3.1-1.8 5.5-4 5.5S8 10.6 8 7.5V4Z" stroke="currentColor" strokeWidth="2" />
-              <path d="M8 6H4v1.5C4 10 5.7 12 8.2 12M16 6h4v1.5c0 2.5-1.7 4.5-4.2 4.5" stroke="currentColor" strokeWidth="2" />
-              <path d="M12 13v4M8.5 20h7M10 17h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-            {t.navRating}
-          </Link>
-          <a href="#position">{t.navPosition}</a>
+          <Link href={`/${locale}#clusters`}>{t.navClusters}</Link>
         </nav>
-      )}
-      <div className="header-actions">
-        <PushSubscribe locale={locale} />
-        <ThemeToggle />
-        <div className="lang-switch" aria-label="Language">
-          <Link className={locale === "ru" ? "is-active" : ""} href="/ru">
-            RU
-          </Link>
-          <Link className={locale === "uz" ? "is-active" : ""} href="/uz">
-            UZ
-          </Link>
+        <div className="header-actions">
+          <LiveStats onlineLabel={t.statsOnline} visitorsLabel={t.statsVisitors} />
+          <PushSubscribe locale={locale} />
+          <SavedLink locale={locale} />
+          <ThemeToggle />
+          <div className="lang-switch" aria-label="Language">
+            <Link className={locale === "ru" ? "is-active" : ""} href="/ru" hrefLang="ru">
+              RU
+            </Link>
+            <Link className={locale === "uz" ? "is-active" : ""} href="/uz" hrefLang="uz">
+              UZ
+            </Link>
+          </div>
         </div>
       </div>
     </header>

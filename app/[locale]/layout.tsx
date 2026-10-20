@@ -1,21 +1,24 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Inter } from "next/font/google";
+import { JetBrains_Mono, Onest } from "next/font/google";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import "../globals.css";
-import { NeuralBackground } from "@/components/NeuralBackground";
 import { SelectionClearButton } from "@/components/SelectionClearButton";
 import { SubscribePopup } from "@/components/SubscribePopup";
 import { dictionary, getLocale, locales, type Locale } from "@/lib/i18n";
+import { themeInitScript } from "@/lib/theme";
 
-// Cyrillic subset is required for ru content — globals.css already declared
-// "Inter" as the intended font, but nothing was ever loading it, so every
-// visitor silently fell back to the OS system font. This makes the existing
-// declaration actually true instead of introducing a new one.
-const inter = Inter({
+// Onest: a modern grotesque with full Cyrillic + Latin, so ru and uz pages
+// share one typeface. JetBrains Mono carries labels, dates and scores.
+const sans = Onest({
   subsets: ["latin", "cyrillic"],
-  variable: "--font-inter",
+  variable: "--font-sans",
+  display: "swap"
+});
+const mono = JetBrains_Mono({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-mono",
   display: "swap"
 });
 
@@ -82,14 +85,20 @@ export default async function LocaleLayout({ children, params }: Props) {
   const t = dictionary[locale];
 
   return (
-    <html lang={locale} className={inter.variable}>
+    // suppressHydrationWarning: themeInitScript sets data-theme on <html>
+    // before React hydrates, so that one attribute legitimately differs.
+    <html lang={locale} className={`${sans.variable} ${mono.variable}`} suppressHydrationWarning>
+      <head>
+        {/* eslint-disable-next-line react/no-danger */}
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body>
-        <NeuralBackground />
         {children}
         <footer className="site-footer">
           <div className="footer-brand">
             <span className="footer-mark">
-              <img src="/brand/site-mark.png" alt="" width={22} height={22} />
+              <img className="brand-logo-dark" src="/brand/mark-on-dark.png" alt="" width={28} height={28} />
+              <img className="brand-logo-light" src="/brand/mark-on-light.png" alt="" width={28} height={28} />
             </span>
             <div>
               <strong>AI Solution Blog</strong>
