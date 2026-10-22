@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import type { EditorOptions } from "@/lib/admin/editor-options";
+import { unsafeContentReason } from "@/lib/admin/content-rules";
 import { renderMarkdownPreview, textStats } from "@/lib/admin/markdown-preview";
 import type { Frontmatter } from "@/lib/schema";
 
@@ -70,6 +71,10 @@ function checkForm(form: Form): Map<string, string> {
   if (!Number.isFinite(r) || r < 1 || r > 10) e.set("rating", "Baho 1 dan 10 gacha.");
   if (!form.cover) e.set("cover", "Muqova rasmini tanlang.");
   if (form.content.trim().length < 50) e.set("content", "Matn kamida 50 belgi bo'lsin.");
+  else {
+    const unsafe = unsafeContentReason(form.content);
+    if (unsafe) e.set("content", unsafe);
+  }
   return e;
 }
 

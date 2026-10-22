@@ -8,7 +8,9 @@ type Props = {
   params: Promise<{ locale: string }>;
 };
 
-export const revalidate = 3600;
+// The server runs several PM2 instances; revalidatePath() from the admin panel only
+// refreshes the one that handled the save, so the others catch up within a minute.
+export const revalidate = 60;
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));

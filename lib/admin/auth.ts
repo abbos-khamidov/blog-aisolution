@@ -19,6 +19,14 @@ const KEY_LENGTH = 64;
 
 export type AdminConfig = { passwordHash: string; sessionSecret: string };
 
+/**
+ * Key that signs session cookies. It includes the password hash, so changing
+ * the admin password instantly logs out every existing session.
+ */
+export function sessionKey(config: AdminConfig): string {
+  return `${config.sessionSecret}\u0000${config.passwordHash}`;
+}
+
 export function readAdminConfig(env: Record<string, string | undefined> = process.env): AdminConfig | null {
   const passwordHash = env.ADMIN_PASSWORD_HASH?.trim();
   const sessionSecret = env.ADMIN_SESSION_SECRET?.trim();
@@ -28,16 +36,19 @@ export function readAdminConfig(env: Record<string, string | undefined> = proces
 
 /* ---------- password ---------- */
 
-/** "scrypt$<N>$<salt b64>$<hash b64>" — salt is random, so the same password gives a different hash every time. */
+/**
+ * "scrypt:<N>:<salt b64>:<hash b64>" — salt is random, so the same password gives a different hash every time.
+ * ":" (not "$") on purpose: Next.js expands "$NAME" inside .env files, which would silently break a "$" hash.
+ */
 export function hashPassword(password: string): string {
   const salt = new Uint8Array(randomBytes(16));
   const hash = scryptSync(password, salt, KEY_LENGTH, { N: SCRYPT_N });
-  return `scrypt$${SCRYPT_N}$${Buffer.from(salt).toString("base64")}$${hash.toString("base64")}`;
+  return `scrypt:${SCRYPT_N}:${Buffer.from(salt).toString("base64")}:${hash.toString("base64")}`;
 }
 
 export function verifyPassword(password: string, stored: string): boolean {
-  const [scheme, n, saltB64, hashB64] = stored.split("$");
-  if (scheme !== "scrypt" || !n || !saltB64 || !hashB64) return false;
+  const [scheme, n, saltB64, hashB64] = stored.trim().split(/[:$]/); // "$" still accepted for hashes set via PM2 env
+  if (scheme !== "scrypt" || !/^\d+$/.test(n ?? "") || !saltB64 || !hashB64) return false;
   const expected = new Uint8Array(Buffer.from(hashB64, "base64"));
   const salt = new Uint8Array(Buffer.from(saltB64, "base64"));
   const actual = new Uint8Array(scryptSync(password, salt, expected.length, { N: Number(n) }));
@@ -105,3 +116,30 @@ export class LoginLimiter {
 }
 
 export const loginLimiter = new LoginLimiter();
+
+/**
+ * All failed logins together, whatever the IP. Stops slow guessing spread over
+ * many addresses and skips the (deliberately slow) scrypt check while locked.
+ * Trade-off: during an attack the real admin also waits up to 15 minutes.
+ */
+export const MAX_FAILED_LOGINS_GLOBAL = 30;
+
+export class GlobalLoginLimiter {
+  private fails: number[] = [];
+
+  private prune(now: number) {
+    this.fails = this.fails.filter((t) => now - t < LOCKOUT_MS);
+  }
+
+  isLocked(now = Date.now()): boolean {
+    this.prune(now);
+    return this.fails.length >= MAX_FAILED_LOGINS_GLOBAL;
+  }
+
+  fail(now = Date.now()) {
+    this.prune(now);
+    this.fails.push(now);
+  }
+}
+
+export const globalLoginLimiter = new GlobalLoginLimiter();
