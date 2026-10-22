@@ -12,7 +12,8 @@
     "lint": "next lint",
     "test": "vitest run",
     "new-post": "tsx scripts/new-post.ts",
-    "notify:new-posts": "tsx scripts/notify-new-posts.ts"
+    "notify:new-posts": "tsx scripts/notify-new-posts.ts",
+    "admin:hash": "tsx scripts/admin-hash.ts"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

@@ -1,0 +1,16 @@
+import Link from "next/link";
+import { PostEditor } from "@/components/admin/PostEditor";
+import { getEditorOptions } from "@/lib/admin/editor-options";
+
+export default function NewPostPage() {
+  return (
+    <>
+      <div className="admin-head compact">
+        <Link href="/admin" className="admin-back">← Maqolalar</Link>
+        <h1>Yangi maqola</h1>
+        <p>Yozing va «Chop etish»ni bosing — maqola darhol saytda chiqadi. Git kerak emas.</p>
+      </div>
+      <PostEditor mode="create" options={getEditorOptions()} />
+    </>
+  );
+}
