@@ -43,7 +43,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       template: "%s — AI Solution Blog"
     },
     description: t.metaDescription,
-    keywords: ["aisolution", "ai solution", "startup evaluation", "оценка стартапов", "ai startups"],
+    keywords: ["aisolution", "ai solution", "внедрение ии в бизнес", "ии в узбекистане", "ai bozori oʻzbekiston", "оценка стартапов"],
+    alternates: {
+      types: { "application/rss+xml": `/${locale}/feed.xml` }
+    },
     icons: {
       icon: "/favicon.svg?v=6",
       shortcut: "/favicon.svg?v=6",

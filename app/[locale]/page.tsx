@@ -25,7 +25,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         ru: "/ru",
         uz: "/uz",
         "x-default": "/ru"
-      }
+      },
+      types: { "application/rss+xml": `/${locale}/feed.xml` }
     }
   };
 }
