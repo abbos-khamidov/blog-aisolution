@@ -122,7 +122,7 @@ export function getPublishedPosts(locale?: Locale): Post[] {
 export function getRatedPosts(locale: Locale): Post[] {
   return getPublishedPosts(locale)
     .filter((post) => post.topicCluster !== "mnenie")
-    .sort((a, b) => b.rating - a.rating || (a.publishedAt < b.publishedAt ? 1 : -1));
+    .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : a.publishedAt > b.publishedAt ? -1 : b.rating - a.rating));
 }
 
 export function getOpinionPosts(locale: Locale): Post[] {
