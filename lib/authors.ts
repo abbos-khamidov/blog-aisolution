@@ -54,7 +54,7 @@ export const authors: Record<string, Author> = {
       ru: "Автор материалов TezCode в блоге AI Solution.",
       uz: "AI Solution blogida TezCode materiallari muallifi."
     },
-    image: "/authors/abdulaziz-ermatov.svg",
+    image: "/authors/abdulaziz-ermatov.jpg",
     sameAs: [],
     isFounder: false,
     organization: { name: "TezCode", url: "https://www.tezcode.dev" }

@@ -75,7 +75,7 @@ export function BlogHome({ locale }: { locale: Locale }) {
     verdictLabel: post.topicCluster === "mnenie" ? t.opinionChip : verdictLabel(post.rating)
   }));
 
-  const rows: VerdictRow[] = [...rated, ...opinions].map((post) => ({
+  const rows: VerdictRow[] = posts.map((post) => ({
     slug: post.slug,
     title: post.title,
     description: post.description,
