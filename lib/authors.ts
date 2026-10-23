@@ -7,6 +7,8 @@ export interface Author {
   image: string; // /authors/<key>.jpg, relative to /public
   sameAs: string[]; // LinkedIn, Threads, GitHub, Telegram — feeds Person.sameAs in jsonld.ts
   isFounder: boolean;
+  /** Set for guest authors from a partner company: Person.worksFor points there instead of AI Solution. */
+  organization?: { name: string; url: string };
 }
 
 /**
@@ -37,6 +39,25 @@ export const authors: Record<string, Author> = {
     image: "/authors/abbas-khamidov.svg",
     sameAs: [],
     isFounder: true
+  },
+  "abdulaziz-ermatov": {
+    key: "abdulaziz-ermatov",
+    name: {
+      ru: "Абдулазиз Ерматов",
+      uz: "Abdulaziz Ermatov"
+    },
+    role: {
+      ru: "Автор, TezCode",
+      uz: "Muallif, TezCode"
+    },
+    bio: {
+      ru: "Автор материалов TezCode в блоге AI Solution.",
+      uz: "AI Solution blogida TezCode materiallari muallifi."
+    },
+    image: "/authors/abdulaziz-ermatov.svg",
+    sameAs: [],
+    isFounder: false,
+    organization: { name: "TezCode", url: "https://www.tezcode.dev" }
   },
   aisolution: {
     key: "aisolution",
