@@ -6,8 +6,8 @@ export const defaultLocale: Locale = "ru";
 
 export const dictionary = {
   ru: {
-    metaTitle: "AI Solution Blog — оценка стартапов без реверансов",
-    metaDescription: "Оцениваем стартапы, AI-продукты и технологические рынки: что взлетит, что шумит, где цифры, а где презентация.",
+    metaTitle: "ИИ в Узбекистане: разборы рынка и внедрения | AI Solution",
+    metaDescription: "Блог AI Solution: разборы ИИ-рынка Узбекистана и Центральной Азии, стартапов и инструментов, внедрение ИИ в бизнес. Цифры вместо презентаций.",
     navClusters: "Темы",
     navOpinion: "Мнения",
     navFeed: "Материалы",
@@ -144,8 +144,8 @@ export const dictionary = {
     statsVisitors: "Всего посетителей"
   },
   uz: {
-    metaTitle: "AI Solution Blog — startaplarni keskin baholaymiz",
-    metaDescription: "Startaplar, AI mahsulotlar va tech bozorlarni baholaymiz: nima uchadi, nima shovqin, qayerda raqam bor, qayerda faqat pitch.",
+    metaTitle: "Oʻzbekistonda AI: bozor va joriy etish tahlili | AI Solution",
+    metaDescription: "AI Solution blogi: Oʻzbekiston va Markaziy Osiyo AI bozori, startaplar va vositalar tahlili, biznesda AI joriy etish. Taqdimot emas, raqamlar.",
     navClusters: "Mavzular",
     navOpinion: "Fikrlar",
     navFeed: "Postlar",

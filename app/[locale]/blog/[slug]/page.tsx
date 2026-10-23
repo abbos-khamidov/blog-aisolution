@@ -47,8 +47,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const author = resolveAuthor(post.author);
 
+  // The layout appends " — AI Solution Blog" (19 chars); drop it when the result would be cut off in the SERP.
+  const longTitle = post.title.length + 19 > 62;
+  const ogImage = post.cover ?? "/og-image.png?v=2";
+
   return {
-    title: post.title,
+    title: longTitle ? { absolute: post.title } : post.title,
     description: post.description,
     alternates: {
       canonical: `/${post.lang}/blog/${post.slug}`,
@@ -57,7 +61,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: post.title,
       description: post.description,
-      images: ["/og-image.png?v=2"],
+      images: [ogImage],
       type: "article",
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt ?? post.publishedAt,
@@ -68,7 +72,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: post.title,
       description: post.description,
-      images: ["/og-image.png?v=2"]
+      images: [ogImage]
     }
   };
 }
