@@ -52,7 +52,7 @@ export interface PersonNode {
   name: string;
   alternateName?: string;
   jobTitle: string;
-  worksFor?: IdRef;
+  worksFor?: IdRef | { "@type": "Organization"; name: string; url: string };
   affiliation?: IdRef;
   sameAs: string[];
 }
@@ -127,8 +127,12 @@ export function buildPersonNode(author: Author): PersonNode {
     name: author.name.ru,
     alternateName: author.alternateName,
     jobTitle: author.role.ru,
-    worksFor: author.isFounder ? { "@id": ORGANIZATION_ID } : undefined,
-    affiliation: author.isFounder ? undefined : { "@id": ORGANIZATION_ID },
+    worksFor: author.isFounder
+      ? { "@id": ORGANIZATION_ID }
+      : author.organization
+        ? { "@type": "Organization", name: author.organization.name, url: author.organization.url }
+        : undefined,
+    affiliation: author.isFounder || author.organization ? undefined : { "@id": ORGANIZATION_ID },
     sameAs: author.sameAs
   };
 }
