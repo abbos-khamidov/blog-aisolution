@@ -3,17 +3,18 @@ import path from "node:path";
 import matter from "gray-matter";
 import { locales, type Locale } from "./i18n";
 import { isKnownAuthor, resolveAuthor } from "./authors";
+import { resolveDataDir } from "./data-dir";
 import { clusterAccent, clusterCoverImage, clusterMeta, formatDate, getVerdict, type Post } from "./post-display";
 import { parseFrontmatter, topicClusters, type TopicCluster } from "./schema";
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
 /**
- * Posts written from the admin panel (/admin). They live next to the push
- * subscriptions in data/ — outside git, so `git pull` on deploy never
- * overwrites them. A file here with the same locale + slug as a repo post
+ * Posts written from the admin panel (/admin), in <data dir>/posts — outside
+ * git and outside .next/, so neither `git pull` nor `next build` touches them
+ * (see lib/data-dir.ts). A file here with the same locale + slug as a repo post
  * replaces that post (that's how the admin edits or hides a repo post).
  */
-export const ADMIN_POSTS_DIR = path.join(process.cwd(), "data", "posts");
+export const ADMIN_POSTS_DIR = path.join(resolveDataDir(), "posts");
 
 export type PostSource = "repo" | "admin";
 const WORDS_PER_MINUTE = 200;

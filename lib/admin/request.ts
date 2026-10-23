@@ -1,9 +1,18 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { readAdminConfig, SESSION_COOKIE, verifySessionToken } from "./auth";
+import { readAdminConfig, SESSION_COOKIE, sessionKey, verifySessionToken } from "./auth";
 
+/**
+ * The visitor's real IP for the login limiter. Nginx sets X-Real-IP to
+ * $remote_addr (a client can't fake it). In X-Forwarded-For only the LAST entry
+ * is added by our proxy — earlier entries are whatever the client sent, so
+ * trusting the first one would let an attacker pick a new "IP" per attempt.
+ */
 export function clientIp(request: Request): string {
-  return request.headers.get("x-forwarded-for")?.split(",")[0].trim() || request.headers.get("x-real-ip") || "local";
+  const realIp = request.headers.get("x-real-ip")?.trim();
+  if (realIp) return realIp;
+  const forwarded = request.headers.get("x-forwarded-for")?.split(",").map((part) => part.trim()).filter(Boolean);
+  return forwarded?.at(-1) || "local";
 }
 
 /**
@@ -13,7 +22,8 @@ export function clientIp(request: Request): string {
 export function isSameOrigin(request: Request): boolean {
   const origin = request.headers.get("origin");
   if (!origin) return false;
-  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
+  // Host is set by nginx ($host); X-Forwarded-Host isn't, so a client could send any value there.
+  const host = request.headers.get("host");
   try {
     return new URL(origin).host === host;
   } catch {
@@ -33,7 +43,7 @@ export async function requireAdmin(request: Request, { write = false } = {}): Pr
   if (!config) return deny(503, "Admin panel is not configured on this server");
   if (write && !isSameOrigin(request)) return deny(403, "Cross-site request blocked");
   const token = (await cookies()).get(SESSION_COOKIE)?.value;
-  if (!verifySessionToken(token, config.sessionSecret)) return deny(401, "Login required");
+  if (!verifySessionToken(token, sessionKey(config))) return deny(401, "Login required");
   return null;
 }
 
@@ -41,5 +51,5 @@ export async function requireAdmin(request: Request, { write = false } = {}): Pr
 export async function isAdminSession(): Promise<boolean> {
   const config = readAdminConfig();
   if (!config) return false;
-  return verifySessionToken((await cookies()).get(SESSION_COOKIE)?.value, config.sessionSecret);
+  return verifySessionToken((await cookies()).get(SESSION_COOKIE)?.value, sessionKey(config));
 }

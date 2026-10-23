@@ -16,6 +16,10 @@ function isTopicCluster(value: string): value is TopicCluster {
   return (topicClusters as readonly string[]).includes(value);
 }
 
+// The server runs several PM2 instances; revalidatePath() from the admin panel only
+// refreshes the one that handled the save, so the others catch up within a minute.
+export const revalidate = 60;
+
 export function generateStaticParams() {
   return locales.flatMap((locale) => getClustersInUse(locale).map((cluster) => ({ locale, cluster })));
 }

@@ -4,40 +4,77 @@ Maqolalarni git'siz qo'shish, tahrirlash va yashirish uchun yopiq panel.
 
 ## Yoqish (serverda, bir marta)
 
-1. Parol xeshini yarating (parol kamida 12 belgi):
+Server `output: "standalone"` rejimida ishlaydi (`.next/standalone/server.js`, PM2 cluster).
+Next.js standalone'ga faqat `.env` va `.env.production` fayllarini ko'chiradi — **`.env.local` ishlamaydi**.
+
+1. Serverda, loyiha papkasida (`/var/www/blog`) parol xeshi va kalit yarating (parol kamida 12 belgi):
    ```bash
+   cd /var/www/blog
    npm run admin:hash -- "sizning-uzun-parolingiz"
-   ```
-2. Tasodifiy sessiya kaliti:
-   ```bash
    node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
    ```
-3. Serverdagi `.env.local` (yoki PM2 env) ga qo'shing:
+2. Ikkalasini `/var/www/blog/.env.production` fayliga yozing (fayl git'ga kirmaydi, `.gitignore` da `.env*`):
    ```
-   ADMIN_PASSWORD_HASH=scrypt$16384$...
+   ADMIN_PASSWORD_HASH=scrypt:16384:...
    ADMIN_SESSION_SECRET=...
    ```
-4. `pm2 reload blog` — tayyor. Kirish: `https://blog.aisolution.uz/admin`.
+   Fayl huquqi: `chmod 600 .env.production`.
+3. `./deploy.sh` — build `.env.production` ni standalone'ga ko'chiradi va PM2'ni qayta ishga tushiradi.
+4. Kirish: `https://blog.aisolution.uz/admin`.
 
 Bu ikki o'zgaruvchi bo'lmasa, panel va API butunlay o'chiq (503).
 
+### Ma'lumotlar qayerda
+
+- Admin'dan yozilgan maqolalar: **`/var/www/blog/data/posts/{uz|ru}/{slug}.mdx`**.
+  Standalone'da `process.cwd()` = `.next/standalone`, `next build` esa `.next/` ni har deploy'da tozalaydi —
+  shuning uchun kod avtomatik ravishda `.next/standalone` dan tashqariga, `/var/www/blog/data` ga yozadi
+  (`lib/data-dir.ts`). Boshqa joy kerak bo'lsa: `ADMIN_DATA_DIR=/mutlaq/yo'l` (`.env.production` da).
+- `data/` git'ga kirmaydi va `git pull` / `npm ci` / `next build` unga tegmaydi. Zaxira nusxasini oling.
+- PM2 2 nusxada ishlaydi: saqlangan nusxa darhol yangilanadi, ikkinchisi 1 daqiqa ichida (`revalidate = 60`).
+
+> Eslatma (admin'ga aloqasi yo'q, mavjud kod): `lib/push.ts` ham `process.cwd()/data` ga yozadi, ya'ni
+> standalone'da `.next/standalone/data/push-subscriptions.json` — bu fayl har deploy'da o'chadi, `npm run notify:new-posts`
+> esa `/var/www/blog/data` dan o'qiydi. `lib/data-dir.ts` dagi `resolveDataDir()` ni u yerda ham ishlatish tavsiya etiladi.
+
 ## Xavfsizlik
 
+Kodda:
 - Parol faqat scrypt xesh ko'rinishida saqlanadi; kodda/gitda parol yo'q.
 - Sessiya: HMAC imzoli cookie, `HttpOnly`, `Secure`, `SameSite=Strict`, 8 soat.
-- 5 marta xato parol → shu IP 15 daqiqa bloklanadi.
-- Yozish so'rovlarida Origin tekshiriladi (CSRF).
+  Imzo kaliti parol xeshiga bog'langan — **parol almashtirilsa, hamma eski sessiyalar darhol bekor bo'ladi**.
+- Parol tanlashdan himoya: bitta IP'dan 5 xato → 15 daqiqa blok; hamma IP'lardan jami 30 xato → 15 daqiqa umumiy blok.
+  IP `X-Real-IP` dan olinadi (nginx yozadi, mijoz soxtalashtira olmaydi).
+- Yozish so'rovlarida `Origin` = `Host` tekshiriladi (CSRF). `X-Forwarded-Host` ga ishonilmaydi.
+- Maqola matnida HTML/JSX teglar (`<script>`, `<iframe>`…), `{ }` ifodalar va `javascript:`/`data:` havolalar rad etiladi;
+  muqova/logo/xizmat havolasi faqat sayt ichidagi yo'l (`/covers/...`). MDX'ning `blockJS` himoyasi ham yoqilgan.
 - `/admin` va `/api/admin` — `noindex`, `no-store`, `X-Frame-Options: DENY`, robots.txt'da yopiq.
-- Ixtiyoriy qo'shimcha himoya — Nginx'da faqat ofis IP'siga ruxsat:
-  ```nginx
-  location /admin { allow 1.2.3.4; deny all; proxy_pass http://127.0.0.1:3002; }
-  location /api/admin { allow 1.2.3.4; deny all; proxy_pass http://127.0.0.1:3002; }
-  ```
+
+Serverda (tavsiya, ustoz uchun):
+1. Nginx'da login'ga tezlik chegarasi (`http {}` ichida bir marta, keyin `server {}` ichida):
+   ```nginx
+   limit_req_zone $binary_remote_addr zone=admin_login:10m rate=5r/m;
+   location = /api/admin/login {
+       limit_req zone=admin_login burst=5 nodelay;
+       proxy_pass http://127.0.0.1:3002;
+       proxy_set_header Host $host;
+       proxy_set_header X-Real-IP $remote_addr;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_set_header X-Forwarded-Proto $scheme;
+   }
+   ```
+2. Eng kuchli himoya — `/admin` ni faqat ofis/VPN IP'siga ochish:
+   ```nginx
+   location /admin     { allow 1.2.3.4; deny all; proxy_pass http://127.0.0.1:3002; proxy_set_header Host $host; proxy_set_header X-Real-IP $remote_addr; }
+   location /api/admin { allow 1.2.3.4; deny all; proxy_pass http://127.0.0.1:3002; proxy_set_header Host $host; proxy_set_header X-Real-IP $remote_addr; }
+   ```
+3. Parol kamida 16 belgi, tasodifiy (parol menejeridan). `.env.production` — `chmod 600`.
+4. `npm audit` ni muntazam ko'rib turing (`npm ci` 11 ta zaiflik ko'rsatdi). `react`/`react-dom` hozir `19.1.0` —
+   eng so'nggi `19.1.x` ga yangilash tavsiya etiladi (alohida PR).
 
 ## Qanday ishlaydi
 
-- Admin'dan yozilgan maqolalar `data/posts/{uz|ru}/{slug}.mdx` ga tushadi (git'ga kirmaydi).
-  **`data/` papkasi serverda saqlanib qolishi kerak** — deploy paytida o'chirilmasin, zaxira qiling.
+- Admin'dan yozilgan maqolalar `data/posts/{uz|ru}/{slug}.mdx` ga tushadi (yuqoridagi «Ma'lumotlar qayerda»ga qarang).
 - Git'dagi maqolani tahrirlasangiz, admin nusxasi yaratiladi va u ustun turadi.
   Admin nusxasini o'chirsangiz — git'dagi asl maqola qaytadi. Git maqolasini paneldan o'chirib bo'lmaydi,
   faqat «Qoralama» qilib yashirish mumkin.

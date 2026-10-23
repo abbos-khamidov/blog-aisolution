@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createSessionToken, hashPassword, LoginLimiter, LOCKOUT_MS, MAX_FAILED_LOGINS, readAdminConfig, SESSION_TTL_SECONDS, verifyPassword, verifySessionToken } from "./auth";
+import { createSessionToken, GlobalLoginLimiter, hashPassword, LoginLimiter, MAX_FAILED_LOGINS_GLOBAL, sessionKey, LOCKOUT_MS, MAX_FAILED_LOGINS, readAdminConfig, SESSION_TTL_SECONDS, verifyPassword, verifySessionToken } from "./auth";
 
 const SECRET = "x".repeat(40);
 
@@ -63,5 +63,39 @@ describe("login limiter", () => {
     limiter.reset("ip");
     limiter.fail("ip", 0);
     expect(limiter.isLocked("ip", 1)).toBe(false);
+  });
+});
+
+describe("password hash in .env files", () => {
+  it("has no \"$\" (Next.js would expand it) and still verifies", () => {
+    const stored = hashPassword("Juda-uzun-parol-2026");
+    expect(stored.includes("$")).toBe(false);
+    expect(stored.startsWith("scrypt:16384:")).toBe(true);
+    expect(verifyPassword("Juda-uzun-parol-2026", stored)).toBe(true);
+    expect(verifyPassword("Juda-uzun-parol-2026", stored.replaceAll(":", "$"))).toBe(true);
+    expect(verifyPassword("noto'g'ri", stored)).toBe(false);
+    expect(verifyPassword("Juda-uzun-parol-2026", "scrypt")).toBe(false);
+  });
+});
+
+
+describe("session is tied to the password", () => {
+  it("changing the password logs everyone out", () => {
+    const before = { passwordHash: hashPassword("Eski-uzun-parol-1"), sessionSecret: SECRET };
+    const token = createSessionToken(sessionKey(before), 1_000);
+    expect(verifySessionToken(token, sessionKey(before), 2_000)).toBe(true);
+    const after = { passwordHash: hashPassword("Yangi-uzun-parol-2"), sessionSecret: SECRET };
+    expect(verifySessionToken(token, sessionKey(after), 2_000)).toBe(false);
+  });
+});
+
+describe("GlobalLoginLimiter", () => {
+  it("locks after too many failures from any IPs and unlocks after the window", () => {
+    const g = new GlobalLoginLimiter();
+    for (let i = 0; i < MAX_FAILED_LOGINS_GLOBAL - 1; i++) g.fail(1_000);
+    expect(g.isLocked(1_000)).toBe(false);
+    g.fail(1_000);
+    expect(g.isLocked(1_000)).toBe(true);
+    expect(g.isLocked(1_000 + LOCKOUT_MS + 1)).toBe(false);
   });
 });

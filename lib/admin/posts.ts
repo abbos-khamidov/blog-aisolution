@@ -5,6 +5,7 @@ import { isKnownAuthor } from "../authors";
 import { ADMIN_POSTS_DIR } from "../content";
 import { locales, type Locale } from "../i18n";
 import { frontmatterSchema, type Frontmatter } from "../schema";
+import { isLocalPath, PATH_FIELDS, unsafeContentReason } from "./content-rules";
 
 export const MAX_CONTENT_LENGTH = 200_000;
 
@@ -38,6 +39,18 @@ export function validatePostInput(body: unknown): { ok: true; post: PostInput } 
     errors.push({ field: "content", message: "must be at least 50 characters" });
   } else if (content.length > MAX_CONTENT_LENGTH) {
     errors.push({ field: "content", message: `must be at most ${MAX_CONTENT_LENGTH} characters` });
+  }
+  if (typeof content === "string") {
+    const reason = unsafeContentReason(content);
+    if (reason) errors.push({ field: "content", message: reason });
+  }
+  if (parsed.success) {
+    for (const key of PATH_FIELDS) {
+      const value = parsed.data[key];
+      if (value !== undefined && !isLocalPath(value)) {
+        errors.push({ field: key, message: "must be a site path like /covers/name.png" });
+      }
+    }
   }
   if (parsed.success && !isKnownAuthor(parsed.data.author)) {
     errors.push({ field: "author", message: "unknown author — add them to lib/authors.ts first" });
