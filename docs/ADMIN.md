@@ -99,3 +99,16 @@ Serverda (tavsiya, ustoz uchun):
 | POST | `/api/admin/posts` | yangi maqola |
 | GET/PUT/DELETE | `/api/admin/posts/{locale}/{slug}` | o'qish / saqlash / admin nusxasini o'chirish |
 | PATCH | `/api/admin/posts/{locale}/{slug}` | `{ draft }` — ro'yxatdan tez yashirish / chiqarish |
+
+## Yangi muqova rasmi qo'shish
+
+Muqovalar `public/covers/*.png` da (asl nusxa — Telegram/Facebook preview uchun). Saytda esa ularning
+yengil WebP nusxalari ko'rsatiladi: `public/covers/opt/<nom>-640.webp` (kartochka) va `-1280.webp` (maqola).
+Yangi PNG qo'shgandan keyin bir marta:
+
+```bash
+npm run covers:optimize
+```
+
+Bu WebP'larni yasaydi va `lib/cover-variants.generated.ts` ni yangilaydi. Unutilsa ham sayt ishlaydi —
+faqat o'sha muqova og'ir PNG bo'lib yuklanadi.

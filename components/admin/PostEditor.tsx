@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { coverSrc } from "@/lib/cover-src";
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import type { EditorOptions } from "@/lib/admin/editor-options";
 import { unsafeContentReason } from "@/lib/admin/content-rules";
@@ -395,14 +396,14 @@ export function PostEditor({ mode, options, initial, canDelete }: Props) {
           <div className={`admin-field${errors.has("cover") ? " has-error" : ""}`}>
             {form.cover && (
               <div className="ed-cover-main">
-                <img src={form.cover} alt="" />
+                <img src={coverSrc(form.cover, 640)} alt="" />
                 {form.coverLabel && <span>{form.coverLabel}</span>}
               </div>
             )}
             <div className="ed-covers" role="radiogroup" aria-label="Muqova rasmi">
               {covers.map((c) => (
                 <button key={c} type="button" role="radio" aria-checked={form.cover === c} className={form.cover === c ? "on" : ""} onClick={() => set("cover", c)} title={c.replace("/covers/", "")}>
-                  <img src={c} alt={c.replace("/covers/", "")} loading="lazy" />
+                  <img src={coverSrc(c, 640)} alt={c.replace("/covers/", "")} loading="lazy" />
                 </button>
               ))}
             </div>

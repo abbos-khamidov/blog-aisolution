@@ -2182,8 +2182,11 @@ body {
 
 .lv-stage {
   position: relative;
+  /* The hero bleeds to the full screen width, but .home clips at 1336px —
+     keep the board inside that frame or wide screens cut its edges off. */
+  max-width: 1336px;
   height: clamp(440px, 46vw, 640px);
-  margin-top: clamp(8px, 1.5vw, 20px);
+  margin: clamp(8px, 1.5vw, 20px) auto 0;
 }
 
 .score-board {
@@ -3094,5 +3097,56 @@ body {
   .lv-mini,
   .lv-cluster {
     transition: none;
+  }
+}
+
+/* =========================================================================
+   Phones and touch screens: same design, finger-sized targets
+   ========================================================================= */
+
+@media (pointer: coarse), (max-width: 620px) {
+  /* ~40px is the smallest comfortable tap target */
+  .card-actions button {
+    width: 42px;
+    height: 42px;
+  }
+
+  .lang-switch a {
+    display: inline-grid;
+    min-width: 40px;
+    min-height: 36px;
+    place-items: center;
+  }
+
+  .theme-toggle,
+  .saved-link,
+  .push-subscribe {
+    min-height: 40px;
+  }
+
+  .subscribe-popup-close {
+    width: 40px;
+    height: 40px;
+  }
+
+  .breadcrumbs a {
+    display: inline-block;
+    padding: 8px 0;
+  }
+
+  .lb-meta {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  /* all four menu items fit on a 360px phone without sideways scrolling */
+  .top-nav {
+    gap: 0;
+  }
+
+  .top-nav a {
+    padding: 9px 10px;
+    font-size: 13.5px;
   }
 }

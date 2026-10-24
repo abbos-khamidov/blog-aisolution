@@ -63,7 +63,8 @@ export function BlogHome({ locale }: { locale: Locale }) {
     if (post.topicCluster === "mnenie") return "opinion";
     return getVerdict(post.rating);
   };
-  const meta = (post: Post) => `${clusterMeta[post.topicCluster].title[locale]} · ${formatDate(post.publishedAt, locale)}`;
+  // Non-breaking spaces inside the date, so a narrow phone never splits "23 окт. 2026 г." over two lines.
+  const meta = (post: Post) => `${clusterMeta[post.topicCluster].title[locale]} · ${formatDate(post.publishedAt, locale).replace(/ /g, "\u00a0")}`;
 
   const boardItems: BoardItem[] = [...rated, ...opinions.slice(0, Math.max(0, 15 - rated.length))].slice(0, 15).map((post) => ({
     href: `/${locale}/blog/${post.slug}`,

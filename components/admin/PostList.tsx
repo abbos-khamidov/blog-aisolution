@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { coverSrc } from "@/lib/cover-src";
 import { useMemo, useState } from "react";
 
 export type PostRow = {
@@ -114,7 +115,7 @@ export function PostList({ rows }: { rows: PostRow[] }) {
             return (
               <li key={key} className={`admin-row${draft ? " is-draft" : ""}`}>
                 <Link href={`/admin/edit/${row.lang}/${row.slug}`} className="admin-row-main">
-                  <img src={row.cover} alt="" loading="lazy" />
+                  <img src={coverSrc(row.cover, 640)} alt="" loading="lazy" />
                   <span className="admin-row-text">
                     <strong>{row.title}</strong>
                     <span className="admin-row-meta">

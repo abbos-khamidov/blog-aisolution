@@ -13,7 +13,8 @@
     "test": "vitest run",
     "new-post": "tsx scripts/new-post.ts",
     "notify:new-posts": "tsx scripts/notify-new-posts.ts",
-    "admin:hash": "tsx scripts/admin-hash.ts"
+    "admin:hash": "tsx scripts/admin-hash.ts",
+    "covers:optimize": "node scripts/optimize-covers.mjs"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
