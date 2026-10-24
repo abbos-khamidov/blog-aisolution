@@ -52,17 +52,20 @@ export function ScoreBoard({ items, label }: { items: BoardItem[]; label: string
       base: item.rating === null ? 4 : (item.rating - 4.8) * 10
     }));
     let cols = 0, rows = 0, boardW = 0, boardH = 0, w = 1, h = 1, dpr = 1, raf = 0, visible = true;
+    // Towers on screen right now — on phones only the first few, so tiles stay big enough to read.
+    let active: Tower[] = towers;
     let hover: Tower | null = null;
     const start = performance.now();
 
-    const layout = (nextCols: number) => {
-      if (nextCols === cols) return;
+    const layout = (nextCols: number, count: number) => {
+      if (nextCols === cols && count === active.length) return;
       cols = nextCols;
-      rows = Math.ceil(towers.length / cols);
+      active = towers.slice(0, Math.min(count, towers.length));
+      rows = Math.ceil(active.length / cols);
       const cells: { r: number; c: number; d: number }[] = [];
       for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) cells.push({ r, c, d: Math.hypot(c - (cols - 1) / 2, (r - (rows - 1) / 2) * 1.3) });
       cells.sort((a, b) => a.d - b.d);
-      towers.forEach((tower, k) => {
+      active.forEach((tower, k) => {
         tower.x = cells[k].c * (TILE_W + GAP);
         tower.y = cells[k].r * (TILE_H + GAP);
       });
@@ -78,7 +81,9 @@ export function ScoreBoard({ items, label }: { items: BoardItem[]; label: string
     };
     const projection = () => {
       const small = w < 700;
-      layout(small ? 3 : 5);
+      // Phone: 2 columns × 4 rows (the 8 best) — the full list is right below the board.
+      if (w < 520) layout(2, 8);
+      else layout(small ? 3 : 5, towers.length);
       const tilt = reduce ? { x: 0, y: 0 } : pointerTilt();
       const a = (((small ? -6 : -8) + tilt.x * 5) * Math.PI) / 180;
       const rx = (((small ? 44 : 50) - tilt.y * 4) * Math.PI) / 180;
@@ -160,14 +165,14 @@ export function ScoreBoard({ items, label }: { items: BoardItem[]; label: string
 
       // towers, far to near
       const leftVisible = -m.camX > 0;
-      for (const tower of towers) {
+      for (const tower of active) {
         let grow = reduce ? 1 : Math.min(1, Math.max(0, (t - 300 - tower.order * 60) / 1100));
         grow = 1 - Math.pow(1 - grow, 3);
         tower.lift += ((hover === tower ? 12 : 0) - tower.lift) * 0.18;
         tower.h = tower.base * grow + tower.lift;
         tower.depth = (tower.x + TILE_W / 2) * m.camX + (tower.y + TILE_H / 2);
       }
-      for (const tower of [...towers].sort((a, b) => a.depth - b.depth)) {
+      for (const tower of [...active].sort((a, b) => a.depth - b.depth)) {
         const x0 = tower.x, y0 = tower.y, x1 = x0 + TILE_W, y1 = y0 + TILE_H, th = tower.h;
         const opinion = tower.verdict === "opinion";
         const face = opinion ? col.panel : tower.verdict === "up" ? col.fill : col.tile;
@@ -217,7 +222,7 @@ export function ScoreBoard({ items, label }: { items: BoardItem[]; label: string
       const rect = canvas.getBoundingClientRect();
       const sx = event.clientX - rect.left, sy = event.clientY - rect.top;
       const det = m.a * m.d - m.b * m.c;
-      for (const tower of [...towers].sort((a, b) => b.depth - a.depth)) {
+      for (const tower of [...active].sort((a, b) => b.depth - a.depth)) {
         const X = sx - m.e, Y = sy + tower.h * m.sc - m.f;
         const bx = (m.d * X - m.c * Y) / det, by = (-m.b * X + m.a * Y) / det;
         if (bx >= tower.x && bx <= tower.x + TILE_W && by >= tower.y && by <= tower.y + TILE_H) return tower;

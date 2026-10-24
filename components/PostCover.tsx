@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { coverSrc } from "@/lib/cover-src";
 import { clusterAccent, clusterCoverImage, clusterMeta } from "@/lib/post-display";
 import type { Locale } from "@/lib/i18n";
 import type { TopicCluster } from "@/lib/schema";
@@ -13,7 +14,8 @@ type Props = {
 };
 
 export function PostCover({ cluster, locale, cover, label, logo, size = "card" }: Props) {
-  const coverImage = cover?.startsWith("/covers/") ? cover : clusterCoverImage[cluster];
+  // Light WebP copy (cards 640px, article hero 1280px) instead of the 2 MB PNG.
+  const coverImage = coverSrc(cover?.startsWith("/covers/") ? cover : clusterCoverImage[cluster], size === "hero" ? 1280 : 640);
   const logoImage = logo ?? "/brand/site-mark.png";
 
   return (
