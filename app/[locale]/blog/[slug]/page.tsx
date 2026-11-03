@@ -58,6 +58,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: longTitle ? { absolute: post.title } : post.title,
     description: post.description,
+    keywords: post.keywords,
     alternates: {
       canonical: `/${post.lang}/blog/${post.slug}`,
       languages
