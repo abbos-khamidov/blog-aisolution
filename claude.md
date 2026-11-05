@@ -130,13 +130,10 @@ aisolution-blog/
 
 Enum `topicCluster`:
 ```
-'vnedrenie'        // внедрение ИИ в бизнес
-'prodazhi'         // ИИ в продажах и CRM
-'integratsii'      // 1C, Битрикс24, OnlinePBX
-'nlp-uz'           // узбекский язык, STT, NLP
-'otrasli'          // отраслевые кейсы: стройка, ритейл, ювелирка
-'ekonomika'        // стоимость, ROI, сроки
-'obuchenie'        // ML, обучение, кадры
+'education'        // ИИ-образование и обучение в Узбекистане
+'market'           // анализ технологического рынка
+'reviews'          // обзоры ПО и разбор продуктов
+'founders'         // основатели и таланты Узбекистана
 'mnenie'           // колонки, позиция AI Solution
 ```
 

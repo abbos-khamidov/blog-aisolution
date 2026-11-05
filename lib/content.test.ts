@@ -50,7 +50,7 @@ describe("content pipeline (reads real content/ directory)", () => {
 
   it("getClustersInUse only lists clusters that actually have published posts", () => {
     const used = getClustersInUse();
-    expect(used).toContain("vnedrenie");
+    expect(used).toContain("reviews");
     expect(used.every((cluster) => (topicClusters as readonly string[]).includes(cluster))).toBe(true);
   });
 

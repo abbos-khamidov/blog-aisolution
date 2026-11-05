@@ -15,75 +15,48 @@ export type Post = Frontmatter & {
 };
 
 export const clusterAccent: Record<TopicCluster, string> = {
-  vnedrenie: "#3aa0ff",
-  prodazhi: "#ff8a3d",
-  integratsii: "#2fd489",
-  "nlp-uz": "#b98bff",
-  otrasli: "#f5b642",
-  ekonomika: "#41c9e2",
-  obuchenie: "#ff6fa8",
+  education: "#ff6fa8",
+  market: "#41c9e2",
+  reviews: "#2fd489",
+  founders: "#f5b642",
   mnenie: "#8f9bb3"
 };
 
 export const clusterCoverImage: Record<TopicCluster, string> = {
-  vnedrenie: "/covers/startup-team.png",
-  prodazhi: "/covers/growth-dashboard.png",
-  integratsii: "/covers/product-lab.png",
-  "nlp-uz": "/covers/product-lab.png",
-  otrasli: "/covers/startup-team.png",
-  ekonomika: "/covers/market-money.png",
-  obuchenie: "/covers/startup-team.png",
+  education: "/covers/ai-education-tashkent.png",
+  market: "/covers/market-money.png",
+  reviews: "/covers/product-lab.png",
+  founders: "/covers/startup-team.png",
   mnenie: "/covers/market-money.png"
 };
 
 export const clusterMeta: Record<TopicCluster, { title: Record<Locale, string>; description: Record<Locale, string> }> = {
-  vnedrenie: {
-    title: { ru: "Оценка стартапов", uz: "Startap bahosi" },
+  education: {
+    title: { ru: "ИИ-образование и обучение в Узбекистане", uz: "O'zbekistonda AI ta'limi va o'qitish" },
     description: {
-      ru: "Продукт, команда, рынок, деньги: быстро отделяем бизнес от презентации.",
-      uz: "Mahsulot, jamoa, bozor, pul: biznesni pitchdan tez ajratamiz."
+      ru: "Курсы, школы и программы по ИИ: кто реально учит, а кто продаёт сертификаты.",
+      uz: "AI kurslari, maktablari va dasturlari: kim haqiqatan o'qitadi, kim faqat sertifikat sotadi."
     }
   },
-  prodazhi: {
-    title: { ru: "Go-to-market и рост", uz: "Go-to-market va o'sish" },
+  market: {
+    title: { ru: "Анализ технологического рынка", uz: "Texnologiya bozori tahlili" },
     description: {
-      ru: "Кому продают, как растут и где воронка держится на честном спросе.",
-      uz: "Kimga sotadi, qanday o'sadi va funnel qayerda real talabga suyanadi."
+      ru: "Игроки, инвестиции, регулирование и цены на рынке технологий и ИИ в Узбекистане и Центральной Азии.",
+      uz: "O'zbekiston va Markaziy Osiyo texnologiya va AI bozoridagi o'yinchilar, investitsiyalar, tartibga solish va narxlar."
     }
   },
-  integratsii: {
-    title: { ru: "Продукт и стек", uz: "Mahsulot va stack" },
+  reviews: {
+    title: { ru: "Обзоры ПО и разбор продуктов", uz: "Dasturlar sharhi va mahsulot tahlili" },
     description: {
-      ru: "Что реально собрано, что только нарисовано и где технология не выдержит рынок.",
-      uz: "Nima real yig'ilgan, nima faqat chizilgan va texnologiya qayerda bozorga dosh bermaydi."
+      ru: "Что продукт делает на самом деле: функции, цена, стек и честная оценка.",
+      uz: "Mahsulot aslida nima qiladi: imkoniyatlari, narxi, texnologiyasi va halol baho."
     }
   },
-  "nlp-uz": {
-    title: { ru: "AI-угол", uz: "AI burchagi" },
+  founders: {
+    title: { ru: "Основатели и таланты Узбекистана", uz: "O'zbekiston asoschilari va talantlari" },
     description: {
-      ru: "Где AI усиливает продукт, а где его приклеили ради красивого слайда.",
-      uz: "AI qayerda mahsulotni kuchaytiradi, qayerda faqat chiroyli slayd uchun yopishtirilgan."
-    }
-  },
-  otrasli: {
-    title: { ru: "Рынки и ниши", uz: "Bozorlar va nishalar" },
-    description: {
-      ru: "Большой ли рынок, больная ли боль и есть ли там место новому игроку.",
-      uz: "Bozor kattami, og'riq haqiqiymi va yangi o'yinchiga joy bormi."
-    }
-  },
-  ekonomika: {
-    title: { ru: "Деньги и оценка", uz: "Pul va baholash" },
-    description: {
-      ru: "Выручка, юнит-экономика, runway и valuation без магии в Excel.",
-      uz: "Tushum, unit economics, runway va valuation — Excel sehrisiz."
-    }
-  },
-  obuchenie: {
-    title: { ru: "Команда и талант", uz: "Jamoa va talent" },
-    description: {
-      ru: "Кто строит, кто продает, кто тащит, а кто просто красиво рассказывает.",
-      uz: "Kim quradi, kim sotadi, kim tortadi, kim faqat chiroyli gapiradi."
+      ru: "Кто строит технологические компании и AI-продукты в Узбекистане и кого стоит слушать.",
+      uz: "O'zbekistonda texnologik kompaniyalar va AI mahsulotlarni kim quryapti va kimni tinglash kerak."
     }
   },
   mnenie: {

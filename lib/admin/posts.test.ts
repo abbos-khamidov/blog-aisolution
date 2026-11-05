@@ -10,7 +10,7 @@ const valid = {
     lang: "uz",
     publishedAt: "2026-10-20",
     author: "abbas-khamidov",
-    topicCluster: "vnedrenie",
+    topicCluster: "reviews",
     keywords: ["admin", "blog"],
     rating: 7.2,
     cover: "/covers/startup-team.png",

@@ -9,7 +9,7 @@ const validFrontmatter = {
   lang: "ru",
   publishedAt: "2026-07-09",
   author: "aisolution",
-  topicCluster: "vnedrenie",
+  topicCluster: "reviews",
   keywords: ["внедрение ии", "автоматизация продаж"],
   rating: 7.4,
   cover: "/covers/vnedrenie-ii-otdel-prodazh.png"
