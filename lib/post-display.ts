@@ -30,41 +30,49 @@ export const clusterCoverImage: Record<TopicCluster, string> = {
   mnenie: "/covers/market-money.png"
 };
 
-export const clusterMeta: Record<TopicCluster, { title: Record<Locale, string>; description: Record<Locale, string> }> = {
+export const clusterMeta: Record<
+  TopicCluster,
+  { title: Record<Locale, string>; description: Record<Locale, string>; keywords: Record<Locale, string[]> }
+> = {
   education: {
     title: { ru: "ИИ-образование и обучение в Узбекистане", uz: "O'zbekistonda AI ta'limi va o'qitish" },
     description: {
-      ru: "Курсы, школы и программы по ИИ: кто реально учит, а кто продаёт сертификаты.",
-      uz: "AI kurslari, maktablari va dasturlari: kim haqiqatan o'qitadi, kim faqat sertifikat sotadi."
-    }
+      ru: "ИИ-образование и обучение в Узбекистане: курсы, школы и программы по ИИ — кто реально учит, а кто продаёт сертификаты.",
+      uz: "O'zbekistonda AI ta'limi va o'qitish: AI kurslari, maktablari va dasturlari — kim haqiqatan o'qitadi, kim faqat sertifikat sotadi."
+    },
+    keywords: { ru: ["ИИ образование Узбекистан", "курсы ИИ Ташкент", "обучение нейросетям Узбекистан", "AI Solution"], uz: ["O'zbekistonda AI ta'limi", "AI kurslari Toshkent", "sun'iy intellekt o'qitish", "AI Solution"] }
   },
   market: {
     title: { ru: "Анализ технологического рынка", uz: "Texnologiya bozori tahlili" },
     description: {
-      ru: "Игроки, инвестиции, регулирование и цены на рынке технологий и ИИ в Узбекистане и Центральной Азии.",
-      uz: "O'zbekiston va Markaziy Osiyo texnologiya va AI bozoridagi o'yinchilar, investitsiyalar, tartibga solish va narxlar."
-    }
+      ru: "Анализ технологического рынка Узбекистана и Центральной Азии: игроки, инвестиции, регулирование и цены на рынке ИИ.",
+      uz: "Texnologiya bozori tahlili: O'zbekiston va Markaziy Osiyo AI bozoridagi o'yinchilar, investitsiyalar, tartibga solish va narxlar."
+    },
+    keywords: { ru: ["анализ технологического рынка", "рынок технологий Узбекистан", "рынок ИИ Узбекистан", "AI Solution"], uz: ["texnologiya bozori tahlili", "O'zbekiston texnologiya bozori", "AI bozori O'zbekiston", "AI Solution"] }
   },
   reviews: {
     title: { ru: "Обзоры ПО и разбор продуктов", uz: "Dasturlar sharhi va mahsulot tahlili" },
     description: {
-      ru: "Что продукт делает на самом деле: функции, цена, стек и честная оценка.",
-      uz: "Mahsulot aslida nima qiladi: imkoniyatlari, narxi, texnologiyasi va halol baho."
-    }
+      ru: "Обзоры ПО и разбор продуктов: что продукт делает на самом деле — функции, цена, стек и честная оценка.",
+      uz: "Dasturlar sharhi va mahsulot tahlili: mahsulot aslida nima qiladi — imkoniyatlari, narxi, texnologiyasi va halol baho."
+    },
+    keywords: { ru: ["обзоры ПО", "разбор продуктов", "обзор AI-продуктов Узбекистан", "AI Solution"], uz: ["dasturlar sharhi", "mahsulot tahlili", "AI mahsulotlar sharhi", "AI Solution"] }
   },
   founders: {
     title: { ru: "Основатели и таланты Узбекистана", uz: "O'zbekiston asoschilari va talantlari" },
     description: {
-      ru: "Кто строит технологические компании и AI-продукты в Узбекистане и кого стоит слушать.",
-      uz: "O'zbekistonda texnologik kompaniyalar va AI mahsulotlarni kim quryapti va kimni tinglash kerak."
-    }
+      ru: "Основатели и таланты Узбекистана: кто строит технологические компании и AI-продукты и кого стоит слушать.",
+      uz: "O'zbekiston asoschilari va talantlari: texnologik kompaniyalar va AI mahsulotlarni kim quryapti va kimni tinglash kerak."
+    },
+    keywords: { ru: ["основатели технологических компаний Узбекистан", "таланты Узбекистана", "AI-специалисты Ташкент", "AI Solution"], uz: ["texnologiya asoschilari O'zbekiston", "O'zbekiston talantlari", "AI mutaxassislar Toshkent", "AI Solution"] }
   },
   mnenie: {
     title: { ru: "Мнения", uz: "Fikrlar" },
     description: {
       ru: "Колонки и позиции редакции: где проходит граница между фактом, оценкой и красивой упаковкой.",
       uz: "Tahririyat ustunlari va pozitsiyalari: fakt, baho va chiroyli qadoq orasidagi chegara qayerda."
-    }
+    },
+    keywords: { ru: ["мнения об ИИ Узбекистан", "AI Solution"], uz: ["AI haqida fikrlar", "AI Solution"] }
   }
 };
 

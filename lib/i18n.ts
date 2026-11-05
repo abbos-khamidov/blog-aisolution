@@ -7,7 +7,7 @@ export const defaultLocale: Locale = "ru";
 export const dictionary = {
   ru: {
     metaTitle: "ИИ в Узбекистане: разборы рынка и внедрения | AI Solution",
-    metaDescription: "Блог AI Solution: разборы ИИ-рынка Узбекистана и Центральной Азии, стартапов и инструментов, внедрение ИИ в бизнес. Цифры вместо презентаций.",
+    metaDescription: "Блог AI Solution: анализ технологического рынка, обзоры ПО и продуктов, ИИ-образование и таланты Узбекистана. Цифры вместо презентаций.",
     navClusters: "Темы",
     navOpinion: "Мнения",
     navFeed: "Материалы",
@@ -145,7 +145,7 @@ export const dictionary = {
   },
   uz: {
     metaTitle: "Oʻzbekistonda AI: bozor va joriy etish tahlili | AI Solution",
-    metaDescription: "AI Solution blogi: Oʻzbekiston va Markaziy Osiyo AI bozori, startaplar va vositalar tahlili, biznesda AI joriy etish. Taqdimot emas, raqamlar.",
+    metaDescription: "AI Solution blogi: texnologiya bozori tahlili, dasturlar sharhi, O'zbekistonda AI ta'limi va talantlar. Taqdimot emas, raqamlar.",
     navClusters: "Mavzular",
     navOpinion: "Fikrlar",
     navFeed: "Postlar",
