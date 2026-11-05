@@ -27,6 +27,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t.ratingTitle,
     description: t.ratingCopy,
+    keywords:
+      locale === "ru"
+        ? ["рейтинг стартапов Узбекистана", "рейтинг AI стартапов", "оценка стартапов"]
+        : ["O'zbekiston startaplari reytingi", "AI startaplar reytingi", "startaplarni baholash"],
     alternates: {
       canonical: `/${locale}/rating`,
       languages: {
