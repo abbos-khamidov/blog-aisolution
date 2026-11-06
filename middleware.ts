@@ -10,11 +10,15 @@ import type { NextRequest } from "next/server";
  * would make the site 308-redirect visitors to https://evil.com/ru (an open
  * redirect, and poisonable once "/" is cached).
  */
+// Fixed, trusted origin. Next parses the Location header with new URL(), so a
+// bare "/ru" throws "Invalid URL" (500). Never derive this from request headers.
+const SITE_ORIGIN = "https://blog.aisolution.uz";
+
 export function middleware(request: NextRequest) {
   if (request.nextUrl.pathname !== "/") {
     return NextResponse.next();
   }
-  return new NextResponse(null, { status: 308, headers: { Location: "/ru" } });
+  return NextResponse.redirect(new URL("/ru", SITE_ORIGIN), 308);
 }
 
 export const config = {
