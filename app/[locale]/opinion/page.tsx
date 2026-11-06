@@ -6,7 +6,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { clusterMeta, getOpinionPosts } from "@/lib/content";
 import { listAuthors } from "@/lib/authors";
 import { dictionary, getLocale, locales, type Locale } from "@/lib/i18n";
-import { buildWebsiteGraph } from "@/lib/jsonld";
+import { buildWebsiteGraph, jsonLdScript } from "@/lib/jsonld";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -52,7 +52,7 @@ export default async function OpinionPage({ params }: Props) {
   return (
     <>
       {/* eslint-disable-next-line react/no-danger */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(graph) }} />
       <SiteHeader locale={locale} compact />
       <main className="article-shell opinion-page">
         <nav className="breadcrumbs" aria-label="Breadcrumb">

@@ -268,3 +268,17 @@ export function findDanglingReferences(graph: JsonLdGraph): string[] {
   graph["@graph"].forEach(visit);
   return referenced.filter((id) => !definedIds.has(id));
 }
+
+/**
+ * Serializes a JSON-LD graph for a <script type="application/ld+json"> tag so
+ * that no string inside it can break out of the tag or inject markup.
+ *
+ * JSON.stringify leaves "<", ">" and "&" as-is, so a value like
+ * `</script><script>…` would close the tag and run attacker script on every
+ * page. Escaping those three to \uXXXX keeps the JSON valid and inert. U+2028
+ * and U+2029 are escaped too — legal in JSON strings but they break a few
+ * inline-script parsers.
+ */
+export function jsonLdScript(graph: unknown): string {
+  return JSON.stringify(graph).replace(/[<>&\u2028\u2029]/g, (ch) => `\\u${ch.charCodeAt(0).toString(16).padStart(4, "0")}`);
+}

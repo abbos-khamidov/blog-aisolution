@@ -12,7 +12,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { resolveAuthor } from "@/lib/authors";
 import { clusterMeta, formatDate, getPostBySlug, getPublishedPosts, getRelatedPosts, getTranslation, getVerdict } from "@/lib/content";
 import { dictionary, getLocale, locales, type Locale } from "@/lib/i18n";
-import { authorUrl, buildArticleGraph } from "@/lib/jsonld";
+import { authorUrl, buildArticleGraph, jsonLdScript } from "@/lib/jsonld";
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
@@ -101,7 +101,7 @@ export default async function ArticlePage({ params }: Props) {
   return (
     <>
       {/* eslint-disable-next-line react/no-danger */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(graph) }} />
       <SiteHeader locale={locale} compact />
       <main className="article-shell">
         <nav className="breadcrumbs" aria-label="Breadcrumb">

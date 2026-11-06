@@ -31,3 +31,9 @@ export function isLocalPath(value: string): boolean {
 }
 
 export const PATH_FIELDS = ["cover", "coverLogo", "serviceLink"] as const;
+
+/** Angle brackets in a title or description could break out of the JSON-LD <script> tag. */
+export function frontmatterTextReason(value: string): string | null {
+  if (/[<>]/.test(value)) return "< va > belgilaridan foydalanib bo'lmaydi";
+  return null;
+}

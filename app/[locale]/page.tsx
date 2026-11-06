@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BlogHome } from "@/components/BlogHome";
 import { getLocale, locales, type Locale } from "@/lib/i18n";
-import { buildWebsiteGraph } from "@/lib/jsonld";
+import { buildWebsiteGraph, jsonLdScript } from "@/lib/jsonld";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -42,7 +42,7 @@ export default async function LocaleHomePage({ params }: Props) {
   return (
     <>
       {/* eslint-disable-next-line react/no-danger */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(graph) }} />
       <BlogHome locale={getLocale(rawLocale)} />
     </>
   );

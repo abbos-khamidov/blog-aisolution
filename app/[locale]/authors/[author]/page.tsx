@@ -6,7 +6,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { isKnownAuthor, listAuthors, resolveAuthor } from "@/lib/authors";
 import { getPostsByAuthor } from "@/lib/content";
 import { dictionary, getLocale, locales, type Locale } from "@/lib/i18n";
-import { buildAuthorGraph } from "@/lib/jsonld";
+import { buildAuthorGraph, jsonLdScript } from "@/lib/jsonld";
 
 type Props = {
   params: Promise<{ locale: string; author: string }>;
@@ -56,7 +56,7 @@ export default async function AuthorPage({ params }: Props) {
   return (
     <>
       {/* eslint-disable-next-line react/no-danger */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(graph) }} />
       <SiteHeader locale={locale} compact />
       <main className="article-shell">
         <nav className="breadcrumbs" aria-label="Breadcrumb">

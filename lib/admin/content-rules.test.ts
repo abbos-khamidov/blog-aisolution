@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isLocalPath, unsafeContentReason } from "./content-rules";
+import { frontmatterTextReason, isLocalPath, unsafeContentReason } from "./content-rules";
 
 describe("unsafeContentReason", () => {
   it("allows normal Markdown", () => {
@@ -32,5 +32,13 @@ describe("isLocalPath", () => {
     for (const bad of ["//evil.example/x.png", "https://evil.example", "/covers/../../etc/passwd", "/\\evil.example", "javascript:alert(1)", "/a b.png"]) {
       expect(isLocalPath(bad)).toBe(false);
     }
+  });
+});
+
+describe("frontmatterTextReason", () => {
+  it("sarlavhada < > ni rad etadi (JSON-LD XSS himoyasi)", () => {
+    expect(frontmatterTextReason("Oddiy sarlavha")).toBeNull();
+    expect(frontmatterTextReason("A </script><script>x</script>")).not.toBeNull();
+    expect(frontmatterTextReason("narx < 5")).not.toBeNull();
   });
 });

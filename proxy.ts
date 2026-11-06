@@ -1,11 +1,17 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+/**
+ * Sends "/" to the Russian homepage with a RELATIVE Location ("/ru"), so the
+ * browser keeps whatever host the visitor used. It must not build an absolute
+ * URL from Host / X-Forwarded-Host (client-controlled) — that would let
+ * "X-Forwarded-Host: evil.com" 308-redirect visitors off-site (open redirect).
+ */
 export function proxy(request: NextRequest) {
-  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host") ?? request.nextUrl.host;
-  const proto = request.headers.get("x-forwarded-proto") ?? request.nextUrl.protocol.replace(":", "");
-  const url = new URL("/ru", `${proto}://${host}`);
-  return NextResponse.redirect(url, 308);
+  if (request.nextUrl.pathname !== "/") {
+    return NextResponse.next();
+  }
+  return new NextResponse(null, { status: 308, headers: { Location: "/ru" } });
 }
 
 export const config = {

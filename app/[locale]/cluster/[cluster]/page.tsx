@@ -5,7 +5,7 @@ import { ContentPostCard } from "@/components/ContentPostCard";
 import { SiteHeader } from "@/components/SiteHeader";
 import { clusterMeta, getClustersInUse, getPostsByCluster } from "@/lib/content";
 import { dictionary, getLocale, locales, type Locale } from "@/lib/i18n";
-import { buildWebsiteGraph } from "@/lib/jsonld";
+import { buildWebsiteGraph, jsonLdScript } from "@/lib/jsonld";
 import { topicClusters, type TopicCluster } from "@/lib/schema";
 
 type Props = {
@@ -66,7 +66,7 @@ export default async function ClusterPage({ params }: Props) {
   return (
     <>
       {/* eslint-disable-next-line react/no-danger */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(graph) }} />
       <SiteHeader locale={locale} compact />
       <main className="article-shell">
         <nav className="breadcrumbs" aria-label="Breadcrumb">

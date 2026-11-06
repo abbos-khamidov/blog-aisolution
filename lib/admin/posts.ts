@@ -5,7 +5,7 @@ import { isKnownAuthor } from "../authors";
 import { ADMIN_POSTS_DIR } from "../content";
 import { locales, type Locale } from "../i18n";
 import { frontmatterSchema, type Frontmatter } from "../schema";
-import { isLocalPath, PATH_FIELDS, unsafeContentReason } from "./content-rules";
+import { frontmatterTextReason, isLocalPath, PATH_FIELDS, unsafeContentReason } from "./content-rules";
 
 export const MAX_CONTENT_LENGTH = 200_000;
 
@@ -43,6 +43,12 @@ export function validatePostInput(body: unknown): { ok: true; post: PostInput } 
   if (typeof content === "string") {
     const reason = unsafeContentReason(content);
     if (reason) errors.push({ field: "content", message: reason });
+  }
+  if (parsed.success) {
+    for (const key of ["title", "description"] as const) {
+      const reason = frontmatterTextReason(parsed.data[key]);
+      if (reason) errors.push({ field: key, message: reason });
+    }
   }
   if (parsed.success) {
     for (const key of PATH_FIELDS) {
