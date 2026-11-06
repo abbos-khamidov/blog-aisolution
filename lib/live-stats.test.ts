@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyPing, isVisitorId, ONLINE_WINDOW_MS } from "./live-stats";
+import { applyPing, isVisitorId, mergeStats, ONLINE_WINDOW_MS } from "./live-stats";
 
 describe("live stats", () => {
   it("counts each browser once and keeps only recent pings online", () => {
@@ -22,5 +22,18 @@ describe("live stats", () => {
     expect(isVisitorId("../../etc/passwd")).toBe(false);
     expect(isVisitorId("short")).toBe(false);
     expect(isVisitorId(42)).toBe(false);
+  });
+});
+
+describe("mergeStats (two PM2 instances share one file)", () => {
+  it("keeps every visitor once, the earliest first visit and the latest ping", () => {
+    const now = 100_000;
+    const a = { visitors: { "visitor-aaaa": 10, "visitor-bbbb": 50 }, lastSeen: { "visitor-aaaa": now - 1_000 } };
+    const b = { visitors: { "visitor-bbbb": 20, "visitor-cccc": 30 }, lastSeen: { "visitor-aaaa": now - 500, "visitor-cccc": now - ONLINE_WINDOW_MS - 1 } };
+    const merged = mergeStats(a, b, now);
+    expect(Object.keys(merged.visitors).length).toBe(3);
+    expect(merged.visitors["visitor-bbbb"]).toBe(20);
+    expect(merged.lastSeen["visitor-aaaa"]).toBe(now - 500);
+    expect("visitor-cccc" in merged.lastSeen).toBe(false);
   });
 });

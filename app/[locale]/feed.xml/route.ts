@@ -6,6 +6,10 @@ const BASE = "https://blog.aisolution.uz";
 const esc = (value: string) =>
   value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
+// Prerendered per language and refreshed at most every 5 minutes, not rebuilt on every hit.
+export const dynamic = "force-static";
+export const revalidate = 300;
+
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }

@@ -94,7 +94,28 @@ export function hasRepoPost(locale: Locale, slug: string): boolean {
   return fs.existsSync(path.join(CONTENT_DIR, locale, `${slug}.mdx`));
 }
 
+/**
+ * Reading and parsing every .mdx file takes ~40 ms of blocking work, and one
+ * page render asks for the posts several times (an unknown /blog/<slug> did the
+ * full read on every hit). Keep the parsed list for a few seconds per process.
+ * The admin panel clears it on save (lib/admin/publish.ts), and the other PM2
+ * instance picks the change up within CONTENT_CACHE_MS.
+ */
+export const CONTENT_CACHE_MS = 10_000;
+let contentCache: { at: number; posts: Post[] } | null = null;
+
+export function clearContentCache() {
+  contentCache = null;
+}
+
 function loadAllPosts(): Post[] {
+  const now = Date.now();
+  if (!contentCache || now - contentCache.at >= CONTENT_CACHE_MS) contentCache = { at: now, posts: readAllPosts() };
+  // A fresh array each time: callers sort it in place.
+  return [...contentCache.posts];
+}
+
+function readAllPosts(): Post[] {
   return locales.flatMap((locale) => {
     const fromAdmin = loadAdminPosts(locale);
     const overridden = new Set(fromAdmin.map((post) => post.slug));

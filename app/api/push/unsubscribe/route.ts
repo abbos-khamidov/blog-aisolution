@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { removeSubscription } from "@/lib/push";
+import { isValidPushEndpoint, removeSubscription } from "@/lib/push";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
 
-  if (!body || typeof body.endpoint !== "string") {
+  if (!body || !isValidPushEndpoint(body.endpoint)) {
     return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
   }
 

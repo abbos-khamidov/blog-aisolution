@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createSessionToken, GlobalLoginLimiter, hashPassword, LoginLimiter, MAX_FAILED_LOGINS_GLOBAL, sessionKey, LOCKOUT_MS, MAX_FAILED_LOGINS, readAdminConfig, SESSION_TTL_SECONDS, verifyPassword, verifySessionToken } from "./auth";
+import { createSessionToken, GlobalLoginLimiter, hashPassword, LoginLimiter, MAX_FAILED_LOGINS_GLOBAL, sessionKey, LOCKOUT_MS, MAX_FAILED_LOGINS, readAdminConfig, SESSION_TTL_SECONDS, verifyPassword, verifyPasswordAsync, verifySessionToken } from "./auth";
 
 const SECRET = "x".repeat(40);
 
@@ -97,5 +97,14 @@ describe("GlobalLoginLimiter", () => {
     g.fail(1_000);
     expect(g.isLocked(1_000)).toBe(true);
     expect(g.isLocked(1_000 + LOCKOUT_MS + 1)).toBe(false);
+  });
+});
+
+describe("verifyPasswordAsync", () => {
+  it("gives the same answers as the sync check", async () => {
+    const stored = hashPassword("Juda-uzun-parol-2026");
+    expect(await verifyPasswordAsync("Juda-uzun-parol-2026", stored)).toBe(true);
+    expect(await verifyPasswordAsync("noto'g'ri-parol", stored)).toBe(false);
+    expect(await verifyPasswordAsync("Juda-uzun-parol-2026", "buzuq")).toBe(false);
   });
 });

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { addSubscription } from "@/lib/push";
+import { addSubscription, isValidPushEndpoint, isValidPushKey } from "@/lib/push";
 import { locales } from "@/lib/i18n";
 
 export async function POST(request: Request) {
@@ -7,9 +7,9 @@ export async function POST(request: Request) {
 
   if (
     !body ||
-    typeof body.endpoint !== "string" ||
-    typeof body.keys?.p256dh !== "string" ||
-    typeof body.keys?.auth !== "string" ||
+    !isValidPushEndpoint(body.endpoint) ||
+    !isValidPushKey(body.keys?.p256dh) ||
+    !isValidPushKey(body.keys?.auth) ||
     !locales.includes(body.locale)
   ) {
     return NextResponse.json({ error: "Invalid subscription payload" }, { status: 400 });

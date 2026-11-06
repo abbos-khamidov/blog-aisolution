@@ -1,6 +1,10 @@
 import path from "node:path";
 import { readFile } from "node:fs/promises";
 
+// Built once at deploy (next build) and served as a file — before, every request
+// re-rendered it (sharp), which used a lot of CPU when many visitors arrived at once.
+export const dynamic = "force-static";
+
 export async function GET() {
   const png = await readFile(path.join(process.cwd(), "public/brand/site-mark-round.png"));
   const svg = `

@@ -1,5 +1,9 @@
 import sharp from "sharp";
 
+// Built once at deploy (next build) and served as a file — before, every request
+// re-rendered it (sharp), which used a lot of CPU when many visitors arrived at once.
+export const dynamic = "force-static";
+
 export async function GET() {
   const png = await sharp("public/brand/site-mark-round.png")
     .resize(32, 32)

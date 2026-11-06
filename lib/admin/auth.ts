@@ -1,4 +1,4 @@
-import { createHmac, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import { createHmac, randomBytes, scrypt, scryptSync, timingSafeEqual } from "node:crypto";
 
 /**
  * Admin authentication. There is exactly one admin login, configured on the
@@ -54,6 +54,26 @@ export function verifyPassword(password: string, stored: string): boolean {
   const actual = new Uint8Array(scryptSync(password, salt, expected.length, { N: Number(n) }));
   // timingSafeEqual: comparison time doesn't leak how many bytes matched.
   return actual.length === expected.length && timingSafeEqual(actual, expected);
+}
+
+/**
+ * Same check without blocking: scrypt is deliberately slow (~40 ms), and the
+ * sync version froze the whole server for that long on every login attempt.
+ * This one runs in Node's thread pool, so pages keep answering during a
+ * password-guessing flood. The login API uses this one.
+ */
+export function verifyPasswordAsync(password: string, stored: string): Promise<boolean> {
+  const [scheme, n, saltB64, hashB64] = stored.trim().split(/[:$]/);
+  if (scheme !== "scrypt" || !/^\d+$/.test(n ?? "") || !saltB64 || !hashB64) return Promise.resolve(false);
+  const expected = new Uint8Array(Buffer.from(hashB64, "base64"));
+  const salt = new Uint8Array(Buffer.from(saltB64, "base64"));
+  return new Promise((resolve) => {
+    scrypt(password, salt, expected.length, { N: Number(n) }, (error, key) => {
+      if (error) return resolve(false);
+      const actual = new Uint8Array(key);
+      resolve(actual.length === expected.length && timingSafeEqual(actual, expected));
+    });
+  });
 }
 
 /* ---------- session token ---------- */
