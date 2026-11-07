@@ -45,6 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: meta.title[locale],
     description: meta.description[locale],
+    keywords: meta.keywords[locale],
     alternates: {
       canonical: `/${locale}/cluster/${rawCluster}`,
       languages

@@ -6,13 +6,10 @@ import { locales } from "./i18n";
  * "ещё по теме" internal linking — see claude.md, задача 5.
  */
 export const topicClusters = [
-  "vnedrenie",
-  "prodazhi",
-  "integratsii",
-  "nlp-uz",
-  "otrasli",
-  "ekonomika",
-  "obuchenie",
+  "education",
+  "market",
+  "reviews",
+  "founders",
   "mnenie"
 ] as const;
 

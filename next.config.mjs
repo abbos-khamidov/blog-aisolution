@@ -28,6 +28,24 @@ const securityHeaders = [
 const nextConfig = {
   trailingSlash: false,
   output: "standalone",
+  // Old topic hubs (before the 4-theme restructure) keep working: permanent
+  // redirect to the closest new hub so indexed links and backlinks survive.
+  async redirects() {
+    const moved = {
+      vnedrenie: "reviews",
+      prodazhi: "reviews",
+      integratsii: "reviews",
+      "nlp-uz": "reviews",
+      otrasli: "market",
+      ekonomika: "market",
+      obuchenie: "education"
+    };
+    return Object.entries(moved).map(([from, to]) => ({
+      source: `/:locale(ru|uz)/cluster/${from}`,
+      destination: `/:locale/cluster/${to}`,
+      permanent: true
+    }));
+  },
   async headers() {
     // The admin panel and its API are also never indexed or cached by anyone in between.
     const privateHeaders = [
