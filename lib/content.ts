@@ -240,3 +240,7 @@ export function getClustersInUse(locale?: Locale): TopicCluster[] {
   const used = new Set(getPublishedPosts(locale).map((post) => post.topicCluster));
   return topicClusters.filter((cluster) => used.has(cluster));
 }
+
+// Листинговые страницы без достаточного числа статей — тонкий контент: noindex и вне sitemap.
+export const MIN_POSTS_FOR_INDEXABLE_HUB = 3;
+export const MIN_POSTS_FOR_INDEXABLE_AUTHOR = 2;
