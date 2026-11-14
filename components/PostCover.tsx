@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { BRANDED_COVERS } from "@/lib/cover-branded.generated";
 import { coverSrc } from "@/lib/cover-src";
 import { clusterAccent, clusterCoverImage, clusterMeta } from "@/lib/post-display";
 import type { Locale } from "@/lib/i18n";
@@ -17,13 +18,15 @@ export function PostCover({ cluster, locale, cover, label, logo, size = "card" }
   // Light WebP copy (cards 640px, article hero 1280px) instead of the 2 MB PNG.
   const coverImage = coverSrc(cover?.startsWith("/covers/") ? cover : clusterCoverImage[cluster], size === "hero" ? 1280 : 640);
   const logoImage = logo ?? "/brand/site-mark.png";
+  // Branded covers (scripts/make-cover.mjs) already show the title — no label pill on top.
+  const branded = cover !== undefined && BRANDED_COVERS.has(cover);
 
   return (
     <div
       className={`post-cover post-cover-${cluster}${size === "hero" ? " post-cover-hero" : ""}`}
       style={{ "--cover-accent": clusterAccent[cluster], "--cover-image": `url(${coverImage})` } as CSSProperties}
     >
-      <span>{label ?? clusterMeta[cluster].title[locale]}</span>
+      {!branded && <span>{label ?? clusterMeta[cluster].title[locale]}</span>}
       <img className="post-cover-logo" src={logoImage} alt="" />
     </div>
   );
