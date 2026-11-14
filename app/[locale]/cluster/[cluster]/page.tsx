@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ContentPostCard } from "@/components/ContentPostCard";
 import { SiteHeader } from "@/components/SiteHeader";
-import { clusterMeta, getClustersInUse, getPostsByCluster } from "@/lib/content";
+import { MIN_POSTS_FOR_INDEXABLE_HUB, clusterMeta, getClustersInUse, getPostsByCluster } from "@/lib/content";
 import { dictionary, getLocale, locales, type Locale } from "@/lib/i18n";
 import { buildWebsiteGraph, jsonLdScript } from "@/lib/jsonld";
 import { topicClusters, type TopicCluster } from "@/lib/schema";
@@ -46,6 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: meta.title[locale],
     description: meta.description[locale],
     keywords: meta.keywords[locale],
+    robots: getPostsByCluster(locale, rawCluster).length < MIN_POSTS_FOR_INDEXABLE_HUB ? { index: false, follow: true } : undefined,
     alternates: {
       canonical: `/${locale}/cluster/${rawCluster}`,
       languages

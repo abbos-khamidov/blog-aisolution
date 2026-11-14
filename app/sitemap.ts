@@ -7,7 +7,9 @@ import {
   getPublishedPosts,
   getRatedPosts,
   getTranslation,
-  type Post
+  type Post,
+  MIN_POSTS_FOR_INDEXABLE_AUTHOR,
+  MIN_POSTS_FOR_INDEXABLE_HUB
 } from "@/lib/content";
 import { locales } from "@/lib/i18n";
 import { listAuthors } from "@/lib/authors";
@@ -51,7 +53,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   );
 
   const clusterHubs: MetadataRoute.Sitemap = locales.flatMap((locale) =>
-    getClustersInUse(locale).map((cluster) => ({
+    getClustersInUse(locale)
+      .filter((cluster) => getPostsByCluster(locale, cluster).length >= MIN_POSTS_FOR_INDEXABLE_HUB)
+      .map((cluster) => ({
       url: `${BASE}/${locale}/cluster/${cluster}`,
       lastModified: latestDate(getPostsByCluster(locale, cluster)),
       alternates: {
@@ -63,7 +67,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   );
 
   const authorPages: MetadataRoute.Sitemap = locales.flatMap((locale) =>
-    listAuthors().map((author) => ({
+    listAuthors()
+      .filter((author) => getPostsByAuthor(author.key, locale).length >= MIN_POSTS_FOR_INDEXABLE_AUTHOR)
+      .map((author) => ({
       url: `${BASE}/${locale}/authors/${author.key}`,
       lastModified: latestDate(getPostsByAuthor(author.key, locale)),
       alternates: {

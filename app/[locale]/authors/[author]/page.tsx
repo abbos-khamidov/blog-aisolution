@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { ContentPostCard } from "@/components/ContentPostCard";
 import { SiteHeader } from "@/components/SiteHeader";
 import { isKnownAuthor, listAuthors, resolveAuthor } from "@/lib/authors";
-import { getPostsByAuthor } from "@/lib/content";
+import { MIN_POSTS_FOR_INDEXABLE_AUTHOR, getPostsByAuthor } from "@/lib/content";
 import { dictionary, getLocale, locales, type Locale } from "@/lib/i18n";
 import { buildAuthorGraph, jsonLdScript } from "@/lib/jsonld";
 
@@ -31,6 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: author.name[locale],
     description: author.bio[locale],
+    robots: getPostsByAuthor(author.key, locale).length < MIN_POSTS_FOR_INDEXABLE_AUTHOR ? { index: false, follow: true } : undefined,
     alternates: {
       canonical: `/${locale}/authors/${author.key}`,
       languages: {
