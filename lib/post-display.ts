@@ -23,11 +23,11 @@ export const clusterAccent: Record<TopicCluster, string> = {
 };
 
 export const clusterCoverImage: Record<TopicCluster, string> = {
-  education: "/covers/ai-education-tashkent.png",
-  market: "/covers/market-money.png",
-  reviews: "/covers/product-lab.png",
-  founders: "/covers/startup-team.png",
-  mnenie: "/covers/market-money.png"
+  education: "/covers/hub-education.png",
+  market: "/covers/hub-market.png",
+  reviews: "/covers/hub-reviews.png",
+  founders: "/covers/hub-founders.png",
+  mnenie: "/covers/hub-opinion.png"
 };
 
 export const clusterMeta: Record<
