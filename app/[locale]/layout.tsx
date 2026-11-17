@@ -47,10 +47,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: {
       types: { "application/rss+xml": `/${locale}/feed.xml` }
     },
+    // Raster icons first: Google Search needs a crawlable PNG/ICO, size a multiple of 48px.
     icons: {
-      icon: "/favicon.svg?v=6",
-      shortcut: "/favicon.svg?v=6",
-      apple: "/favicon.svg?v=6"
+      icon: [
+        { url: "/brand/favicon-192.png?v=7", sizes: "192x192", type: "image/png" },
+        { url: "/brand/favicon-96.png?v=7", sizes: "96x96", type: "image/png" },
+        { url: "/brand/favicon-48.png?v=7", sizes: "48x48", type: "image/png" },
+        { url: "/favicon.ico?v=7", sizes: "48x48" }
+      ],
+      shortcut: "/favicon.ico?v=7",
+      apple: { url: "/brand/apple-touch-icon.png?v=7", sizes: "180x180", type: "image/png" }
     },
     openGraph: {
       title: t.metaTitle,

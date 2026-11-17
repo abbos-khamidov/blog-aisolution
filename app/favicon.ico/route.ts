@@ -5,18 +5,16 @@ import sharp from "sharp";
 export const dynamic = "force-static";
 
 export async function GET() {
-  const png = await sharp("public/brand/site-mark-round.png")
-    .resize(32, 32)
-    .png()
-    .toBuffer();
+  // 48×48: Google Search ignores favicons that are not a multiple of 48px.
+  const png = await sharp("public/brand/favicon-48.png").png().toBuffer();
   const header = Buffer.alloc(6 + 16);
 
   header.writeUInt16LE(0, 0);
   header.writeUInt16LE(1, 2);
   header.writeUInt16LE(1, 4);
 
-  header.writeUInt8(32, 6);
-  header.writeUInt8(32, 7);
+  header.writeUInt8(48, 6);
+  header.writeUInt8(48, 7);
   header.writeUInt8(0, 8);
   header.writeUInt8(0, 9);
   header.writeUInt16LE(1, 10);
