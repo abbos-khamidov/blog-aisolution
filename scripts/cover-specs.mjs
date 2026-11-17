@@ -64,6 +64,10 @@ export const coverSpecs = [
   uz("ozbekistonda-aining-yangi-yuzlari-hozirdan-kimni-tinglash-kerak", "founders", "AI YANGI YUZLARI", "hozirdan kimni tinglash kerak", "people"),
 
   // ---- mnenie ----
+  ru("kontrol-kachestva-zvonkov-ai", "mnenie", "КОНТРОЛЬ ЗВОНКОВ", "ручная выборка или анализ всех звонков", "wave"),
+  uz("qongiroqlar-sifati-nazorati-ai", "mnenie", "QO'NG'IROQ NAZORATI", "qo'lda tanlash yoki barcha qo'ng'iroq tahlili", "wave"),
+  ru("pochemu-slivayutsya-lidy", "mnenie", "СЛИВ ЛИДОВ", "скорость ответа · дисциплина лидов", "leak"),
+  uz("lidlar-nega-yoqoladi", "mnenie", "YO'QOLGAN LIDLAR", "javob tezligi · lid intizomi", "leak"),
   ru("kak-otdelit-mnenie-ot-rejtinga", "mnenie", "МНЕНИЕ ≠ РЕЙТИНГ", "где проходит граница", "quote"),
   uz("fikrni-reytingdan-qanday-ajratish-kerak", "mnenie", "FIKR ≠ REYTING", "chegara qayerda", "quote"),
   ru("pochemu-ocenki-startapov-dolzhny-byt-zhestkimi", "mnenie", "ЖЁСТКИЕ ОЦЕНКИ", "почему без реверансов", "gauge"),

@@ -1,3 +1,4 @@
+import { samePathInEveryLocale } from "@/lib/i18n";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -55,7 +56,7 @@ export default async function RatingPage({ params }: Props) {
     <>
       {/* eslint-disable-next-line react/no-danger */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(graph) }} />
-      <SiteHeader locale={locale} compact />
+      <SiteHeader locale={locale} compact alternates={samePathInEveryLocale("/rating")} />
       <main className="article-shell rating-page">
         <nav className="breadcrumbs" aria-label="Breadcrumb">
           <Link href={`/${locale}`}>{t.back}</Link>
