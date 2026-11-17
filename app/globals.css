@@ -3150,3 +3150,39 @@ body {
     font-size: 13.5px;
   }
 }
+
+/* ---------- header: Telegram channel ---------- */
+
+.telegram-link {
+  display: inline-grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 999px;
+  color: var(--muted);
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.telegram-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+.telegram-link:hover,
+.telegram-link:focus-visible {
+  background: var(--glass-strong);
+  color: #d8ff2c;
+}
+
+:root[data-theme="light"] .telegram-link:hover,
+:root[data-theme="light"] .telegram-link:focus-visible {
+  color: var(--accent-text);
+}
+
+@media (max-width: 620px) {
+  .telegram-link {
+    width: 36px;
+    height: 40px;
+  }
+}

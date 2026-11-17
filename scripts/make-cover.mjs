@@ -95,6 +95,11 @@ const icons = {
   growth: `<path ${a} d="M20 176 H186 M20 176 V20"/><path ${b} d="M30 160 C70 156 100 130 120 96 C136 70 156 46 180 30"/><path ${a} d="M160 26 L182 28 L178 50"/>
     <circle cx="120" cy="96" r="6" fill="${LIME}" stroke="none"/>`,
   globe: `<circle ${a} cx="100" cy="100" r="78"/><ellipse ${b} cx="100" cy="100" rx="34" ry="78"/><path ${a} d="M24 76 H176 M24 124 H176"/>`,
+  wave: `<path ${a} d="M14 100 H34 M46 76 V124 M66 52 V148 M86 84 V116 M106 36 V164 M126 70 V130 M146 90 V110 M166 60 V140 M186 100 H194"/>
+    <circle ${b} cx="106" cy="100" r="88" stroke-dasharray="4 10"/>`,
+  leak: `<path ${a} d="M20 30 H180 L120 98 V150 L80 168 V98 Z"/><path ${b} d="M150 64 C158 80 170 84 178 96"/>
+    <path ${b} d="M176 112 C170 124 170 132 176 136 C182 132 182 124 176 112 Z M156 140 C151 150 151 156 156 160 C161 156 161 150 156 140 Z M184 156 C180 164 180 170 184 172 C188 170 188 164 184 156 Z"/>
+    <circle cx="100" cy="186" r="6" fill="${LIME}" stroke="none"/>`,
   magnifier: `<circle ${a} cx="86" cy="86" r="56"/><path ${a} d="M128 128 L178 178"/><path ${b} d="M58 92 L78 112 L116 66"/>`,
 };
 

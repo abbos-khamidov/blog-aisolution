@@ -1,3 +1,4 @@
+import { samePathInEveryLocale } from "@/lib/i18n";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -38,7 +39,7 @@ export default async function SavedPage({ params }: Props) {
 
   return (
     <>
-      <SiteHeader locale={locale} compact />
+      <SiteHeader locale={locale} compact alternates={samePathInEveryLocale("/saved")} />
       <main className="article-shell saved-page">
         <nav className="breadcrumbs" aria-label="Breadcrumb">
           <Link href={`/${locale}`}>{t.back}</Link>

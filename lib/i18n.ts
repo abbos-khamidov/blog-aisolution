@@ -65,6 +65,7 @@ export const dictionary = {
     authorPosts: "Публикации автора",
     badgeNew: "Свежее",
     navSaved: "Сохранённые",
+    navTelegram: "Telegram-канал",
     heroTitleBefore: "Оцениваем стартапы",
     heroTitleAccent: "глазами AI",
     heroTitleAfter: "",
@@ -203,6 +204,7 @@ export const dictionary = {
     authorPosts: "Muallif materiallari",
     badgeNew: "Yangi",
     navSaved: "Saqlanganlar",
+    navTelegram: "Telegram kanal",
     heroTitleBefore: "Startaplarni",
     heroTitleAccent: "AI ko'zi",
     heroTitleAfter: "bilan baholaymiz",
@@ -285,4 +287,9 @@ export const dictionary = {
 
 export function getLocale(value?: string): Locale {
   return locales.includes(value as Locale) ? (value as Locale) : defaultLocale;
+}
+
+/** RU/UZ switch targets for a page that exists under the same path in every locale. */
+export function samePathInEveryLocale(path: string): Record<Locale, string> {
+  return Object.fromEntries(locales.map((locale) => [locale, `/${locale}${path}`])) as Record<Locale, string>;
 }

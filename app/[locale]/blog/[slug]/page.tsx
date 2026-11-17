@@ -94,6 +94,7 @@ export default async function ArticlePage({ params }: Props) {
   const author = resolveAuthor(post.author);
   const cluster = clusterMeta[post.topicCluster];
   const related = getRelatedPosts(post, 3);
+  const translation = getTranslation(post);
   const graph = buildArticleGraph(post);
   const verdict = getVerdict(post.rating);
   const verdictLabel =
@@ -103,7 +104,14 @@ export default async function ArticlePage({ params }: Props) {
     <>
       {/* eslint-disable-next-line react/no-danger */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(graph) }} />
-      <SiteHeader locale={locale} compact />
+      <SiteHeader
+        locale={locale}
+        compact
+        alternates={{
+          [post.lang]: `/${post.lang}/blog/${post.slug}`,
+          ...(translation ? { [translation.lang]: `/${translation.lang}/blog/${translation.slug}` } : {})
+        }}
+      />
       <main className="article-shell">
         <nav className="breadcrumbs" aria-label="Breadcrumb">
           <Link href={`/${locale}`}>{t.back}</Link>

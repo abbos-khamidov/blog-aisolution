@@ -1,3 +1,4 @@
+import { samePathInEveryLocale } from "@/lib/i18n";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -69,7 +70,7 @@ export default async function ClusterPage({ params }: Props) {
     <>
       {/* eslint-disable-next-line react/no-danger */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(graph) }} />
-      <SiteHeader locale={locale} compact />
+      <SiteHeader locale={locale} compact alternates={samePathInEveryLocale(`/cluster/${rawCluster}`)} />
       <main className="article-shell">
         <nav className="breadcrumbs" aria-label="Breadcrumb">
           <Link href={`/${locale}`}>{t.back}</Link>
