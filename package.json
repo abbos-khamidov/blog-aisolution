@@ -15,7 +15,8 @@
     "notify:new-posts": "tsx scripts/notify-new-posts.ts",
     "admin:hash": "tsx scripts/admin-hash.ts",
     "covers:make": "node scripts/make-cover.mjs",
-    "covers:optimize": "node scripts/optimize-covers.mjs"
+    "covers:optimize": "node scripts/optimize-covers.mjs",
+    "favicon:make": "node scripts/make-favicon.mjs"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
