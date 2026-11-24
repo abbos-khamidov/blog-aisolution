@@ -1,4 +1,10 @@
+import { analyticsCspSources, readAnalyticsConfig } from "./lib/analytics-config.mjs";
+
 /** @type {import('next').NextConfig} */
+
+// GA4 / Yandex Metrica hosts are allowed only when their ID is configured (see lib/analytics-config.mjs).
+const analytics = analyticsCspSources(readAnalyticsConfig());
+const withAnalytics = (base, extra) => [base, ...extra].join(" ");
 
 // On every page: stop MIME-sniffing, block framing (clickjacking), force HTTPS
 // for two years (HSTS), limit the referer, and a Content-Security-Policy that
@@ -16,11 +22,11 @@ const securityHeaders = [
       "base-uri 'self'",
       "object-src 'none'",
       "frame-ancestors 'none'",
-      "img-src 'self' data:",
+      withAnalytics("img-src 'self' data:", analytics.img),
       "font-src 'self' https://fonts.gstatic.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "script-src 'self' 'unsafe-inline'",
-      "connect-src 'self'"
+      withAnalytics("script-src 'self' 'unsafe-inline'", analytics.script),
+      withAnalytics("connect-src 'self'", analytics.connect)
     ].join("; ")
   }
 ];
