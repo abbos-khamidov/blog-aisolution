@@ -1,20 +1,17 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import { PushSubscribe } from "./PushSubscribe";
-import { ScoreRing } from "./ScoreRing";
 import { SiteHeader } from "./SiteHeader";
 import { MethodSteps } from "./live/MethodSteps";
 import { MotionHeading } from "./live/MotionHeading";
 import { ScoreBoard, type BoardItem } from "./live/ScoreBoard";
-import { BroadcastScene, CoreScene, ScoreRain, SignalScene } from "./live/SectionScenes";
+import { ClustersSection } from "./ClustersSection";
+import { FeedSection, postMeta, verdictKind, verdictText } from "./FeedSection";
+import { BroadcastScene, CoreScene, SignalScene } from "./live/SectionScenes";
 import { StarSky } from "./live/StarSky";
-import { VerdictBoard, type VerdictRow } from "./live/VerdictBoard";
 import type { Locale } from "@/lib/i18n";
 import { dictionary } from "@/lib/i18n";
 import {
-  clusterMeta,
-  formatDate,
-  getClustersInUse,
   getOpinionPosts,
   getPublishedPosts,
   getRatedPosts,
@@ -35,36 +32,16 @@ function shortLabel(title: string): string {
   return `${out || head.slice(0, 22)}…`;
 }
 
-/** Same rules as the old feed pills (components/FeedFilter.tsx), precomputed per post. */
-function feedTags(post: Post): string[] {
-  const tags: string[] = [];
-  if (post.coverLabel === "AISOLUTION") tags.push("aisolution");
-  if (post.category === "startup" || post.category === "product") tags.push(post.category);
-  if (post.coverLabel === "AI EDUCATION") tags.push("education");
-  if (post.topicCluster === "mnenie") tags.push("mnenie");
-  return tags;
-}
-
 export function BlogHome({ locale }: { locale: Locale }) {
   const t = dictionary[locale];
   const posts = getPublishedPosts(locale);
   const rated = getRatedPosts(locale);
   const opinions = getOpinionPosts(locale);
-  const clusters = getClustersInUse(locale);
-  const featured = rated[0];
   const average = rated.length ? rated.reduce((sum, post) => sum + post.rating, 0) / rated.length : 0;
   const strong = rated.filter((post) => getVerdict(post.rating) === "up");
 
-  const verdictLabel = (rating: number) => {
-    const verdict = getVerdict(rating);
-    return verdict === "up" ? t.ratingVerdictUp : verdict === "average" ? t.ratingVerdictAverage : t.ratingVerdictDown;
-  };
-  const verdictKey = (post: Post): VerdictRow["verdict"] => {
-    if (post.topicCluster === "mnenie") return "opinion";
-    return getVerdict(post.rating);
-  };
-  // Non-breaking spaces inside the date, so a narrow phone never splits "23 окт. 2026 г." over two lines.
-  const meta = (post: Post) => `${clusterMeta[post.topicCluster].title[locale]} · ${formatDate(post.publishedAt, locale).replace(/ /g, "\u00a0")}`;
+  const verdictLabel = (rating: number) => verdictText(rating, t);
+  const meta = (post: Post) => postMeta(post, locale);
 
   const boardItems: BoardItem[] = [...rated, ...opinions.slice(0, Math.max(0, 15 - rated.length))].slice(0, 15).map((post) => ({
     href: `/${locale}/blog/${post.slug}`,
@@ -72,30 +49,9 @@ export function BlogHome({ locale }: { locale: Locale }) {
     title: post.title,
     meta: meta(post),
     rating: post.topicCluster === "mnenie" ? null : post.rating,
-    verdict: verdictKey(post),
+    verdict: verdictKind(post),
     verdictLabel: post.topicCluster === "mnenie" ? t.opinionChip : verdictLabel(post.rating)
   }));
-
-  const rows: VerdictRow[] = posts.map((post) => ({
-    slug: post.slug,
-    title: post.title,
-    description: post.description,
-    meta: meta(post),
-    minutes: `${post.readMinutes} ${t.min}`,
-    rating: post.topicCluster === "mnenie" ? null : post.rating,
-    verdict: verdictKey(post),
-    verdictLabel: post.topicCluster === "mnenie" ? t.opinionChip : verdictLabel(post.rating),
-    tags: feedTags(post)
-  }));
-
-  const filterLabels = [
-    { key: "all", label: locale === "ru" ? "Все" : "Barchasi" },
-    { key: "startup", label: locale === "ru" ? "Стартапы" : "Startaplar" },
-    { key: "product", label: locale === "ru" ? "Продукты" : "Mahsulotlar" },
-    { key: "aisolution", label: "AISOLUTION" },
-    { key: "education", label: locale === "ru" ? "AI обучение" : "AI ta'lim" },
-    { key: "mnenie", label: t.navOpinion }
-  ].filter((f) => f.key === "all" || rows.some((row) => row.tags.includes(f.key)));
 
   const trackedStartups = rated.slice(0, 7).map((post) => ({
     label: shortLabel(post.title).replace(/…$/, "").split(/\s+/).slice(0, 2).join(" ").toUpperCase(),
@@ -130,7 +86,7 @@ export function BlogHome({ locale }: { locale: Locale }) {
             <MotionHeading as="h1" id="hero-title" text={t.homeTitleLead} soft={t.homeTitleSoft} immediate />
             <p className="lv-lead">{t.heroCopy}</p>
             <div className="lv-actions">
-              <Link className="button primary" href={`/${locale}#feed`}>
+              <Link className="button primary" href={`/${locale}/materials`}>
                 {t.heroCta}
               </Link>
               <Link className="button ghost" href={`/${locale}#method`}>
@@ -206,50 +162,7 @@ export function BlogHome({ locale }: { locale: Locale }) {
           </div>
         </section>
 
-        <section className="lv-section lv-verdicts" id="feed" aria-labelledby="verdicts-title">
-          <div className="lv-bg lv-bg-rain">
-            <ScoreRain ratings={rated.map((post) => post.rating)} />
-          </div>
-          <div className="lv-head">
-            <MotionHeading id="verdicts-title" text={t.verdictsTitle} />
-            <p className="lv-lead">{t.verdictsCopy}</p>
-          </div>
-          {featured && (
-            <article className="lv-featured">
-              <ScoreRing rating={featured.rating} label={verdictLabel(featured.rating)} size="lg" />
-              <div>
-                <p className="lv-label">{t.featuredKicker}</p>
-                <h3>
-                  <Link href={`/${locale}/blog/${featured.slug}`}>{featured.title}</Link>
-                </h3>
-                <p className="lv-featured-copy">{featured.description}</p>
-                <div className="lv-featured-meta">
-                  <Link className="button primary" href={`/${locale}/blog/${featured.slug}`}>
-                    {t.readReview}
-                  </Link>
-                  <span>
-                    {meta(featured)} · {featured.readMinutes} {t.min}
-                  </span>
-                </div>
-              </div>
-            </article>
-          )}
-          <VerdictBoard
-            rows={rows}
-            locale={locale}
-            readLabel={t.readReview}
-            labels={{
-              filters: filterLabels,
-              saved: t.navSaved,
-              search: t.searchLabel,
-              searchPlaceholder: t.searchPlaceholder,
-              empty: t.searchEmpty,
-              emptySaved: t.savedEmpty,
-              opinionGroup: t.opinionGroup,
-              shownOf: t.shownOf
-            }}
-          />
-        </section>
+        <FeedSection locale={locale} />
 
         <section className="lv-section lv-method" id="method" aria-labelledby="method-title">
           <div>
@@ -259,20 +172,7 @@ export function BlogHome({ locale }: { locale: Locale }) {
           <MethodSteps steps={steps} />
         </section>
 
-        <section className="lv-section" id="clusters" aria-labelledby="clusters-title">
-          <div className="lv-head">
-            <MotionHeading id="clusters-title" text={t.clustersTitle} />
-            <p className="lv-lead">{t.clustersCopy}</p>
-          </div>
-          <div className="lv-clusters">
-            {clusters.map((cluster) => (
-              <Link key={cluster} className="lv-cluster" href={`/${locale}/cluster/${cluster}`}>
-                <h3>{clusterMeta[cluster].title[locale]}</h3>
-                <p>{clusterMeta[cluster].description[locale]}</p>
-              </Link>
-            ))}
-          </div>
-        </section>
+        <ClustersSection locale={locale} />
 
         <section className="lv-section" id="numbers" aria-labelledby="numbers-title">
           <div className="lv-head">

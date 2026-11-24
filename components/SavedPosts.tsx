@@ -38,7 +38,7 @@ export function SavedPosts({ locale, posts }: Props) {
       <div className="saved-empty">
         <p className="section-copy">{t.savedEmpty}</p>
         <div className="hero-actions">
-          <Link className="button primary" href={`/${locale}#feed`}>
+          <Link className="button primary" href={`/${locale}/materials`}>
             {t.navFeed}
           </Link>
         </div>

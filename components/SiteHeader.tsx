@@ -28,10 +28,10 @@ export function SiteHeader({ locale, alternates = {} }: Props) {
       <div className="site-header-bar">
         <Brand href={`/${locale}`} />
         <nav className="top-nav" aria-label="Primary navigation">
-          <Link href={`/${locale}#feed`}>{t.navFeed}</Link>
+          <Link href={`/${locale}/materials`}>{t.navFeed}</Link>
           <Link href={`/${locale}/rating`}>{t.navRating}</Link>
           <Link href={`/${locale}/opinion`}>{t.navOpinion}</Link>
-          <Link href={`/${locale}#clusters`}>{t.navClusters}</Link>
+          <Link href={`/${locale}/topics`}>{t.navClusters}</Link>
         </nav>
         <div className="header-actions">
           <a

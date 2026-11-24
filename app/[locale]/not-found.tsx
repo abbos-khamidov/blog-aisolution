@@ -25,7 +25,7 @@ export default function NotFound() {
           <Link className="button primary" href={`/${defaultLocale}`}>
             {t.back}
           </Link>
-          <Link className="button ghost" href={`/${defaultLocale}#feed`}>
+          <Link className="button ghost" href={`/${defaultLocale}/materials`}>
             {t.navFeed}
           </Link>
         </div>

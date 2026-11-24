@@ -94,5 +94,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }));
 
-  return [...home, ...posts, ...clusterHubs, ...authorPages, ...ratingPages, ...opinionPages];
+  // Header pages «Материалы» and «Темы»
+  const navPages: MetadataRoute.Sitemap = ["materials", "topics"].flatMap((page) =>
+    locales.map((locale) => ({
+      url: `${BASE}/${locale}/${page}`,
+      lastModified: latestDate(getPublishedPosts(locale)),
+      alternates: {
+        languages: Object.fromEntries(locales.map((l) => [l, `${BASE}/${l}/${page}`]))
+      }
+    }))
+  );
+
+  return [...home, ...posts, ...clusterHubs, ...authorPages, ...ratingPages, ...opinionPages, ...navPages];
 }
