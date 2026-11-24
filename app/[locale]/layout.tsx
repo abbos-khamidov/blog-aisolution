@@ -4,6 +4,7 @@ import { JetBrains_Mono, Onest } from "next/font/google";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import "../globals.css";
+import { Analytics } from "@/components/Analytics";
 import { SelectionClearButton } from "@/components/SelectionClearButton";
 import { SubscribePopup } from "@/components/SubscribePopup";
 import { dictionary, getLocale, locales, type Locale } from "@/lib/i18n";
@@ -120,6 +121,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         </footer>
         <SelectionClearButton locale={locale} />
         <SubscribePopup locale={locale} />
+        <Analytics />
       </body>
     </html>
   );
